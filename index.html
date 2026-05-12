@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>🌟 UNITED 🌟 Group Savings Fund</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+if(typeof XLSX==='undefined'){
+var _s1=document.createElement('script');_s1.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+_s1.onerror=function(){var _s2=document.createElement('script');_s2.src='https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js';_s2.onerror=function(){var el=document.getElementById('xlsxError');if(el)el.style.display='block';};document.head.appendChild(_s2);};
+document.head.appendChild(_s1);
+}
+</script>
+<style>
+:root{
+ --bg:#0b0b1a;--bg2:#12122a;--card:rgba(26,26,50,0.88);--card-border:rgba(255,215,0,0.12);
+ --text:#FFFFFF;--text2:#B0BEC5;--text3:#7889a0;
+ --gold:#FFD700;--gold2:#FFC107;--blue:#4FC3F7;--green:#00E676;--red:#FF6B6B;--orange:#FFB74D;--purple:#CE93D8;--teal:#4DB6AC;
+ --border:rgba(255,255,255,0.06);--shadow:0 8px 40px rgba(0,0,0,0.5);--radius:18px;--radius-sm:12px;
+ --tr:all 0.3s ease;
+}
+.light-mode{
+ --bg:#F0F2F7;--bg2:#E8EBF0;--card:rgba(255,255,255,0.95);--card-border:rgba(0,0,0,0.08);
+ --text:#1a1a2e;--text2:#555;--text3:#888;--gold:#B8860B;--gold2:#996515;
+ --border:rgba(0,0,0,0.06);--shadow:0 8px 40px rgba(0,0,0,0.08);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:65px;}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;transition:var(--tr);}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(11,11,26,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px;}
+.light-mode .nav{background:rgba(255,255,255,0.92);}
+.nav-brand{font-weight:800;font-size:1.1rem;color:var(--gold);white-space:nowrap;}
+.nav-links{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 0;}
+.nav-links::-webkit-scrollbar{display:none;}
+.nav-link{padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:600;color:var(--text2);white-space:nowrap;transition:var(--tr);text-decoration:none;}
+.nav-link:hover{color:var(--gold);background:rgba(255,215,0,0.08);}
+.nav-ctrls{display:flex;gap:6px;flex-shrink:0;}
+.nav-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--card-border);background:var(--card);color:var(--text);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:var(--tr);}
+.nav-btn:hover{border-color:var(--gold);background:rgba(255,215,0,0.1);}
+
+/* HERO */
+.hero{text-align:center;padding:40px 20px 30px;}
+.hero h1{font-size:clamp(1.8rem,5vw,3.2rem);font-weight:900;color:var(--gold);text-shadow:0 0 40px rgba(255,215,0,0.2);letter-spacing:2px;}
+.hero .sub{font-size:1rem;color:var(--text2);margin-top:6px;}
+.hero .badge{display:inline-block;margin-top:12px;padding:5px 18px;border-radius:30px;background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);color:var(--gold);font-size:0.82rem;font-weight:600;}
+
+.container{max-width:1400px;margin:0 auto;padding:0 20px 40px;}
+
+/* SECTION */
+.section{background:var(--card);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--card-border);border-radius:var(--radius);padding:26px;margin-bottom:26px;box-shadow:var(--shadow);transition:var(--tr);}
+.section:hover{border-color:rgba(255,215,0,0.22);}
+.s-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid rgba(255,215,0,0.12);}
+.s-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.s-title{font-size:1.15rem;font-weight:700;}
+
+/* SUMMARY CARDS */
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:26px;}
+.sc{border-radius:var(--radius);padding:24px 20px;transition:var(--tr);cursor:default;}
+.sc:hover{transform:translateY(-4px);}
+.sc .sc-icon{font-size:2rem;margin-bottom:6px;}
+.sc .sc-label{font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;opacity:0.85;}
+.sc .sc-val{font-size:2rem;font-weight:900;margin-top:2px;line-height:1.2;}
+.sc .sc-sub{font-size:0.74rem;margin-top:5px;opacity:0.7;}
+.sc1{background:linear-gradient(135deg,#1a1a3e,#2d2d5e);}.sc1 .sc-val{color:#FFD700;}.sc1 .sc-label{color:#FFE082;}
+.sc2{background:linear-gradient(135deg,#0d253f,#1a3a5c);}.sc2 .sc-val{color:#4FC3F7;}.sc2 .sc-label{color:#81D4FA;}
+.sc3{background:linear-gradient(135deg,#2e1a00,#4a2c0a);}.sc3 .sc-val{color:#FFB74D;}.sc3 .sc-label{color:#FFCC80;}
+.sc4{background:linear-gradient(135deg,#2d0a0a,#4a1a1a);}.sc4 .sc-val{color:#FF6B6B;}.sc4 .sc-label{color:#EF9A9A;}
+.light-mode .sc1{background:linear-gradient(135deg,#fffbe6,#fff8d6);}.light-mode .sc1 .sc-val{color:#B8860B;}.light-mode .sc1 .sc-label{color:#8B6914;}
+.light-mode .sc2{background:linear-gradient(135deg,#e1f5fe,#b3e5fc);}.light-mode .sc2 .sc-val{color:#0277BD;}.light-mode .sc2 .sc-label{color:#01579B;}
+.light-mode .sc3{background:linear-gradient(135deg,#fff3e0,#ffe0b2);}.light-mode .sc3 .sc-val{color:#E65100;}.light-mode .sc3 .sc-label{color:#BF360C;}
+.light-mode .sc4{background:linear-gradient(135deg,#fce4ec,#f8bbd0);}.light-mode .sc4 .sc-val{color:#C62828;}.light-mode .sc4 .sc-label{color:#B71C1C;}
+
+/* CHARTS */
+.ch-row{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:26px;}
+.ch-box{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--card-border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);transition:var(--tr);}
+.ch-box:hover{border-color:rgba(255,215,0,0.22);}
+.ch-box h3{font-size:1.05rem;font-weight:700;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.ch-wrap{position:relative;width:100%;height:300px;}
+.ch-wrap canvas{width:100%!important;height:100%!important;}
+.ch-total{text-align:center;margin-top:10px;font-size:0.88rem;color:var(--text2);}.ch-total b{color:var(--gold);font-size:1.1rem;}
+
+/* DONUT CUSTOM LEGEND */
+.dl-title{font-size:0.82rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin:18px 0 10px;text-align:center;}
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.dl-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,255,255,0.05);border-radius:10px;border:1px solid var(--border);transition:var(--tr);}
+.light-mode .dl-item{background:rgba(0,0,0,0.03);}
+.dl-item:hover{border-color:rgba(255,215,0,0.35);background:rgba(255,215,0,0.06);}
+.dl-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.3);}
+.dl-info{display:flex;flex-direction:column;line-height:1.3;}
+.dl-name{font-size:0.9rem;font-weight:700;color:var(--text);}
+.dl-amt{font-size:1rem;font-weight:800;color:var(--gold);}
+.dl-pct{font-size:0.75rem;color:var(--text2);font-weight:500;margin-left:3px;}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-sm);border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;font-size:0.9rem;}
+th{background:rgba(255,215,0,0.08);color:var(--gold);padding:13px 14px;font-weight:700;font-size:0.8rem;text-transform:uppercase;letter-spacing:0.7px;white-space:nowrap;border-bottom:2px solid rgba(255,215,0,0.15);text-align:center;position:sticky;top:0;z-index:2;}
+.light-mode th{background:#f5f0e0;color:#8B6914;}
+td{padding:12px 14px;text-align:center;white-space:nowrap;font-size:0.88rem;border-bottom:1px solid var(--border);color:var(--text);}
+tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+.light-mode tr:nth-child(even) td{background:rgba(0,0,0,0.02);}
+tr:hover td{background:rgba(255,215,0,0.04);}
+.td-n{text-align:left!important;font-weight:600;min-width:150px;}
+.paid{color:var(--green)!important;font-weight:700;}.unpaid{color:#FF5252!important;font-weight:600;opacity:0.75;}
+.light-mode .paid{color:#2E7D32!important;}.light-mode .unpaid{color:#C62828!important;}
+.t-row td{background:rgba(255,215,0,0.08)!important;font-weight:800;color:var(--gold)!important;border-top:2px solid rgba(255,215,0,0.25);font-size:0.93rem;}
+
+/* PENDING BAR */
+.pb-bg{background:rgba(255,255,255,0.08);border-radius:10px;height:24px;overflow:hidden;min-width:110px;}
+.light-mode .pb-bg{background:rgba(0,0,0,0.06);}
+.pb-fill{height:100%;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#fff;transition:width 1s ease;}
+.pbr{background:linear-gradient(90deg,#FF6B6B,#EF5350);}
+.pbo{background:linear-gradient(90deg,#FFB74D,#FF9800);}
+.pby{background:linear-gradient(90deg,#FFD54F,#FFC107);color:#333!important;}
+.pbg{background:linear-gradient(90deg,#00E676,#00C853);}
+
+/* GOLD CARDS */
+.g-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.gc{border-radius:var(--radius);padding:22px;background:linear-gradient(145deg,rgba(30,20,0,0.9),rgba(50,35,5,0.8));border:2px solid rgba(255,215,0,0.25);transition:var(--tr);position:relative;overflow:hidden;}
+.light-mode .gc{background:linear-gradient(145deg,#fffbe6,#fff3cc);border-color:rgba(184,134,11,0.3);}
+.gc:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(255,215,0,0.15);border-color:var(--gold);}
+.gc h4{color:var(--gold);font-size:0.95rem;font-weight:700;margin-bottom:4px;}
+.gc .gp{font-size:1.7rem;font-weight:900;color:#FFD700;margin:4px 0;}
+.light-mode .gc .gp{color:#B8860B;}
+.gc p{color:var(--text2);font-size:0.86rem;margin:2px 0;line-height:1.5;}
+.gc .gs{font-weight:700;font-size:0.88rem;margin-top:6px;}
+
+/* TABS */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.tb{padding:8px 20px;border-radius:10px;font-size:0.86rem;font-weight:600;color:var(--text2);background:rgba(255,255,255,0.04);border:1.5px solid var(--border);cursor:pointer;transition:var(--tr);font-family:'Poppins',sans-serif;}
+.light-mode .tb{background:rgba(0,0,0,0.03);}
+.tb:hover{color:var(--gold);border-color:rgba(255,215,0,0.3);}
+.tb.active{color:var(--gold);border-color:var(--gold);background:rgba(255,215,0,0.1);}
+.tc{display:none;animation:su .35s ease;}.tc.active{display:block;}
+@keyframes su{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* EXTRAS */
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;}
+.ex{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:var(--tr);}
+.light-mode .ex{background:rgba(0,0,0,0.02);}
+.ex:hover{border-color:rgba(255,215,0,0.25);}
+.ex .el{font-size:0.76rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;}
+.ex .ev{font-size:1.25rem;font-weight:800;margin-top:5px;}
+.ex .en{font-size:0.73rem;color:var(--text3);margin-top:3px;}
+.epos{color:var(--green);}.eneg{color:var(--red);}
+.light-mode .epos{color:#2E7D32;}.light-mode .eneg{color:#C62828;}
+
+/* UPLOAD */
+.uz{border:2.5px dashed rgba(255,215,0,0.3);border-radius:var(--radius);padding:40px 20px;text-align:center;cursor:pointer;transition:var(--tr);background:rgba(255,215,0,0.02);}
+.uz:hover{background:rgba(255,215,0,0.06);border-color:var(--gold);}
+.uz .ui{font-size:3rem;margin-bottom:8px;}
+.uz .ut{font-size:1.05rem;font-weight:700;color:var(--text);}
+.uz .us{font-size:0.86rem;color:var(--text2);margin-top:4px;}
+.uz input[type="file"]{display:none;}
+.uact{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.ubtn{padding:10px 22px;border-radius:10px;font-size:0.86rem;font-weight:600;cursor:pointer;transition:var(--tr);font-family:'Poppins',sans-serif;border:1.5px solid var(--gold);background:transparent;color:var(--gold);}
+.ubtn:hover{background:var(--gold);color:#0b0b1a;transform:translateY(-2px);}
+.ubtn-p{background:var(--gold);color:#0b0b1a;}.ubtn-p:hover{background:#FFE082;}
+.ibox{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin-top:18px;text-align:left;}
+.light-mode .ibox{background:rgba(0,0,0,0.02);}
+.ibox h4{color:var(--gold);font-size:0.95rem;margin-bottom:10px;}
+.ibox li{color:var(--text2);font-size:0.86rem;margin:6px 0;line-height:1.6;}
+.ibox code{background:rgba(255,215,0,0.12);padding:2px 7px;border-radius:5px;color:var(--gold);font-size:0.8rem;font-weight:600;}
+
+
+.xlsx-err{display:none;color:var(--red);background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:14px;margin-top:12px;font-size:0.88rem;text-align:center;}
+
+/* FOOTER */
+.footer{text-align:center;padding:25px 20px;color:var(--text3);font-size:0.8rem;border-top:1px solid var(--border);margin-top:16px;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,215,0,0.3);border-radius:10px;}
+
+/* PRINT */
+@media print{.nav,.uz,.ubtn,.tabs,.nav-btn{display:none!important;}body{background:#fff;color:#000;}.section,.ch-box,.sc{border:1px solid #ddd;box-shadow:none;background:#fff;}th{background:#f5f0e0!important;color:#333!important;}td{color:#333;}}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+.sum-grid{grid-template-columns:1fr 1fr;}.ch-row{grid-template-columns:1fr;}.g-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+.nav{padding:0 10px;height:52px;}.nav-links{display:none;}
+.container{padding:0 12px 30px;}.hero{padding:30px 12px 20px;}.hero h1{font-size:1.7rem;}
+.sum-grid{grid-template-columns:1fr 1fr;gap:12px;}.sc{padding:18px 14px;}.sc .sc-val{font-size:1.5rem;}
+.ch-row{grid-template-columns:1fr;gap:16px;}.ch-wrap{height:260px;}
+.g-grid{grid-template-columns:1fr;}.section{padding:18px 14px;}
+table{font-size:0.84rem;}th{padding:11px 10px;font-size:0.73rem;}td{padding:10px;font-size:0.84rem;}
+.dl-grid{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+.sum-grid{grid-template-columns:1fr;}.sc .sc-val{font-size:1.7rem;}
+.hero h1{font-size:1.4rem;}.ch-wrap{height:230px;}
+.ex-grid{grid-template-columns:1fr 1fr;}
+}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{0%{opacity:0;transform:scale(0.5)}60%{transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 5px rgba(255,215,0,0.2)}50%{box-shadow:0 0 25px rgba(255,215,0,0.4)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes rowSlide{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.anim{opacity:1;transform:none;transition:opacity 0.7s cubic-bezier(0.22,1,0.36,1),transform 0.7s cubic-bezier(0.22,1,0.36,1);}
+.anim.visible{opacity:1;transform:translateY(0);}
+.hero h1{animation:fadeInDown 1s cubic-bezier(0.22,1,0.36,1) 0.2s both;}
+.hero .sub{animation:fadeInUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both;}
+.hero .badge{animation:popIn 0.7s cubic-bezier(0.22,1,0.36,1) 0.8s both;}
+.nav{animation:fadeInDown 0.6s ease both;}
+.sc:hover{animation:pulseGlow 2s ease infinite;}
+.sc .sc-icon{transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);}
+.sc:hover .sc-icon{transform:scale(1.25) rotate(10deg);}
+.gc:hover{animation:pulseGlow 2s ease infinite;}
+.ch-box{transition:transform 0.4s ease,box-shadow 0.4s ease;}.ch-box:hover{transform:translateY(-6px);}
+.tbl-wrap tbody tr{animation:rowSlide 0.4s ease both;}
+.tbl-wrap tbody tr:nth-child(1){animation-delay:0.05s;}.tbl-wrap tbody tr:nth-child(2){animation-delay:0.1s;}
+.tbl-wrap tbody tr:nth-child(3){animation-delay:0.15s;}.tbl-wrap tbody tr:nth-child(4){animation-delay:0.2s;}
+.tbl-wrap tbody tr:nth-child(5){animation-delay:0.25s;}.tbl-wrap tbody tr:nth-child(6){animation-delay:0.3s;}
+.tbl-wrap tbody tr:nth-child(7){animation-delay:0.35s;}.tbl-wrap tbody tr:nth-child(8){animation-delay:0.4s;}
+.ex{transition:transform 0.3s ease;}.ex:hover{transform:translateY(-4px);}
+.uz{transition:all 0.4s ease;}.uz .ui{animation:float 3s ease-in-out infinite;}
+.pb-fill{transition:width 1.5s cubic-bezier(0.22,1,0.36,1);}
+.dl-item{transition:transform 0.3s ease;}.dl-item:hover{transform:translateX(6px);}
+.ubtn{transition:all 0.3s ease;}.ubtn:active{transform:scale(0.95);}
+.tb{transition:all 0.3s ease;}.tb:active{transform:scale(0.95);}
+@media(prefers-reduced-motion:reduce){.anim{opacity:1;transform:none;transition:none;}.hero h1,.hero .sub,.hero .badge,.nav,.uz .ui{animation:none;}.tbl-wrap tbody tr{animation:none;}}
+
+.light-mode #topStatus{background:linear-gradient(90deg,#fff8e1,#fffde7)!important;color:#8B6914!important;border-bottom-color:#B8860B!important;}
+</style>
+</head>
+<body>
+<div id="topStatus" style="background:linear-gradient(90deg,#1a1a2e,#2d1b69);color:#FFD700;padding:12px 16px;font-family:sans-serif;font-size:14px;text-align:center;border-bottom:2px solid #FFD700;transition:all 0.5s ease;">⏳ Loading Dashboard...</div>
+
+
+<!-- NAV -->
+<nav class="nav">
+<div class="nav-brand">🌟 UNITED</div>
+<div class="nav-links">
+<a href="#overview" class="nav-link">Overview</a><a href="#charts" class="nav-link">Charts</a><a href="#members" class="nav-link">Members</a><a href="#pending" class="nav-link">Pending</a><a href="#gold" class="nav-link">Gold</a><a href="#monthly" class="nav-link">Monthly</a><a href="#extras" class="nav-link">Extras</a><a href="#upload" class="nav-link">Upload</a>
+</div>
+<div class="nav-ctrls">
+<button class="nav-btn" onclick="document.body.classList.toggle('light-mode');upCh();" title="Theme">🌓</button>
+<button class="nav-btn" onclick="window.print()" title="Print">🖨</button>
+</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="overview">
+<h1>🌟 UNITED 🌟</h1>
+<p class="sub">Group Savings Fund Dashboard</p>
+<div class="badge">8 Members · Est. 2023 · Updated May 2026</div>
+</div>
+
+<div class="container">
+
+<!-- SUMMARY -->
+<div class="sum-grid">
+<div class="sc sc1"><div class="sc-icon">💎</div><div class="sc-label">Total Fund Value</div><div class="sc-val">—</div><div class="sc-sub">All contributions + extras</div></div>
+<div class="sc sc2"><div class="sc-icon">🏦</div><div class="sc-label">Account Balance</div><div class="sc-val">—</div><div class="sc-sub">Cash in bank</div></div>
+<div class="sc sc3"><div class="sc-icon">🪙</div><div class="sc-label">Gold Value</div><div class="sc-val">—</div><div class="sc-sub">2 Geni 1 Gram · Mustufa's Locker</div></div>
+<div class="sc sc4"><div class="sc-icon">⏳</div><div class="sc-label">Total Pending</div><div class="sc-val">—</div><div class="sc-sub">—</div></div>
+</div>
+
+<!-- CHARTS -->
+<div id="charts">
+<div class="ch-row anim">
+<div class="ch-box"><h3>📊 Year-wise Collection</h3><div class="ch-wrap"><canvas id="yChart"></canvas></div><div class="ch-total">Total Collected: <b>—</b></div></div>
+<div class="ch-box"><h3>🍩 Member Contribution Share</h3><div class="ch-wrap" style="height:auto;"><canvas id="mChart" style="max-height:300px;"></canvas></div><div class="dl-title">👥 Member Breakdown</div><div class="dl-grid" id="dLeg"></div></div>
+</div>
+<div class="ch-row anim" style="grid-template-columns:1fr;">
+<div class="ch-box"><h3>⚡ Pending Amount per Member</h3><div class="ch-wrap" style="height:320px;"><canvas id="pChart"></canvas></div></div>
+</div>
+</div>
+
+<!-- MEMBERS -->
+<div class="section anim" id="members">
+<div class="s-header"><div class="s-icon" style="background:rgba(79,195,247,0.12);color:var(--blue);">👥</div><div class="s-title">Member Contribution Overview</div></div>
+<div class="tbl-wrap"><table>
+<thead><tr><th style="text-align:left;">Name</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th><th>Total</th></tr></thead>
+<tbody><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text3);">Upload Excel to load data</td></tr></tbody></table></div>
+</div>
+
+<!-- PENDING -->
+<div class="section anim" id="pending">
+<div class="s-header"><div class="s-icon" style="background:rgba(255,107,107,0.12);color:var(--red);">⚠️</div><div class="s-title">Pending Amounts</div></div>
+<div class="tbl-wrap"><table>
+<thead><tr><th style="text-align:left;">Name</th><th>Payment</th><th>Gold</th><th>Total</th><th style="min-width:140px;">Status</th></tr></thead>
+<tbody id="pBod"></tbody>
+</table></div>
+</div>
+
+<!-- GOLD -->
+<div class="section anim" id="gold">
+<div class="s-header"><div class="s-icon" style="background:rgba(255,183,77,0.12);color:var(--orange);">🪙</div><div class="s-title">Gold Investments</div></div>
+<div class="g-grid">
+<div class="gc"><h4>🏷️ Gold</h4><div class="gp">—</div></div>
+</div>
+</div>
+
+<!-- MONTHLY -->
+<div class="section anim" id="monthly">
+<div class="s-header"><div class="s-icon" style="background:rgba(0,230,118,0.12);color:var(--green);">📅</div><div class="s-title">Monthly Payment Breakdown</div></div>
+<div class="tabs">
+<button class="tb active" onclick="sTab('t23',this)">📆 2023</button>
+<button class="tb" onclick="sTab('t24',this)">📆 2024</button>
+<button class="tb" onclick="sTab('t25',this)">📆 2025</button>
+<button class="tb" onclick="sTab('t26',this)">📆 2026</button>
+</div>
+<div id="t23" class="tc active"><p style="margin-bottom:10px;color:var(--text2);font-size:0.86rem;">💰 Rate: <b style="color:var(--gold);">₹200/month</b> · May – Dec 2023</p><div class="tbl-wrap"><table><thead><tr><th style="text-align:left;">Month</th><th>Abbas</th><th>Abdul</th><th>Burhan</th><th>Hozefa</th><th>Shabbir</th><th>Mustufa</th><th>Murtaza</th><th>Hakim</th></tr></thead><tbody id="b23"></tbody></table></div></div>
+<div id="t24" class="tc"><p style="margin-bottom:10px;color:var(--text2);font-size:0.86rem;">💰 Rate: <b style="color:var(--gold);">₹400/month</b> · Jan – Dec 2024</p><div class="tbl-wrap"><table><thead><tr><th style="text-align:left;">Month</th><th>Abbas</th><th>Abdul</th><th>Burhan</th><th>Hozefa</th><th>Shabbir</th><th>Mustufa</th><th>Murtaza</th><th>Hakim</th></tr></thead><tbody id="b24"></tbody></table></div></div>
+<div id="t25" class="tc"><p style="margin-bottom:10px;color:var(--text2);font-size:0.86rem;">💰 Rate: <b style="color:var(--gold);">₹400/month</b> · Jan – Dec 2025</p><div class="tbl-wrap"><table><thead><tr><th style="text-align:left;">Month</th><th>Abbas</th><th>Abdul</th><th>Burhan</th><th>Hozefa</th><th>Shabbir</th><th>Mustufa</th><th>Murtaza</th><th>Hakim</th></tr></thead><tbody id="b25"></tbody></table></div></div>
+<div id="t26" class="tc"><p style="margin-bottom:10px;color:var(--text2);font-size:0.86rem;">💰 Rate: <b style="color:var(--gold);">₹400/month</b> · Jan – Dec 2026</p><div class="tbl-wrap"><table><thead><tr><th style="text-align:left;">Month</th><th>Abbas</th><th>Abdul</th><th>Burhan</th><th>Hozefa</th><th>Shabbir</th><th>Mustufa</th><th>Murtaza</th><th>Hakim</th></tr></thead><tbody id="b26"></tbody></table></div></div>
+</div>
+
+<!-- EXTRAS -->
+<div class="section anim" id="extras">
+<div class="s-header"><div class="s-icon" style="background:rgba(206,147,216,0.12);color:var(--purple);">📋</div><div class="s-title">Extras & Adjustments</div></div>
+<div class="ex-grid">
+<div class="ex"><div class="el">No Data</div><div class="ev">—</div></div>
+</div>
+</div>
+
+<!-- UPLOAD -->
+<div class="section anim" id="upload">
+<div class="s-header"><div class="s-icon" style="background:rgba(77,182,172,0.12);color:var(--teal);">📤</div><div class="s-title">Excel Upload & Sync</div></div>
+<div id="xlsxError" class="xlsx-err">⚠️ SheetJS library failed to load. Excel upload requires internet. Please check your connection and reload.</div>
+<div class="uz" onclick="document.getElementById('exF').click()">
+<div class="ui">📁</div>
+<div class="ut">Tap to Upload Excel File</div>
+<div class="us">Supports .xlsx and .xls</div>
+<input type="file" id="exF" accept=".xlsx,.xls" onchange="handleXL(event)">
+</div>
+<div class="uact">
+<button class="ubtn" onclick="dlTemplate()">📥 Download Template</button>
+
+</div>
+<div class="ibox" style="margin-top:18px;"><h4>GitHub Auto-Sync</h4><div style="display:flex;gap:10px;flex-wrap:wrap;"><input type="text" id="ghUrl" value="https://raw.githubusercontent.com/hozefa111/Excel/main/%F0%9F%8C%9FUNITED%F0%9F%8C%9F.xlsx" placeholder="GitHub raw .xlsx URL..." style="flex:1;min-width:200px;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:rgba(255,255,255,0.05);color:var(--text);font-family:Poppins;"><button class="ubtn" onclick="saveGHUrl()">Save</button><button class="ubtn ubtn-p" onclick="fetchGH()">Fetch</button></div></div>
+
+
+</div>
+
+</div>
+<div class="footer">🌟 UNITED Group Savings Fund Dashboard · May 2026 · Made with ❤️</div>
+
+<script>
+Chart.register(ChartDataLabels);
+var xlD=null,yC=null,mC=null,pC=null;
+
+function fmt(v){return '\u20b9'+Number(v||0).toLocaleString('en-IN');}
+function pNum(v){if(typeof v==='number')return v;if(!v)return 0;return Number(String(v).replace(/[\u20b9,\s]/g,''))||0;}
+function findSheet(obj,p){var k=Object.keys(obj);for(var j=0;j<p.length;j++)for(var i=0;i<k.length;i++)if(k[i].toLowerCase().trim().indexOf(p[j].toLowerCase())>=0)return k[i];return null;}
+function shortName(f){var s=String(f).trim().split(/[\s&]+/)[0].trim();if(!s)return '';var m={murtaza:'Murtaza',murtuza:'Murtaza',abbas:'Abbas',abdul:'Abdul',burhan:'Burhan',hozefa:'Hozefa',shabbir:'Shabbir',mustufa:'Mustufa',hakim:'Hakim'};return m[s.toLowerCase()]||s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();}
+function sTab(id,btn){document.querySelectorAll('.tc').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.tb').forEach(function(b){b.classList.remove('active');});document.getElementById(id).classList.add('active');btn.classList.add('active');}
+
+var mos=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var mbs=['Abbas','Abdul','Burhan','Hozefa','Shabbir','Mustufa','Murtaza','Hakim'];
+function bld(r,fn){var d={};mos.forEach(function(m,i){d[m]={};mbs.forEach(function(mb){d[m][mb]=fn(mb,i,r);});});return d;}
+
+function rMo(bId,data,skip){
+var body=document.getElementById(bId);if(!body)return;var h='',tots={};
+mbs.forEach(function(mb){tots[mb]=0;});
+mos.forEach(function(m){var row=data[m];if(!row)return;var any=mbs.some(function(mb){return row[mb]>0;});if(skip&&!any)return;h+='<tr><td class="td-n">'+m+'</td>';mbs.forEach(function(mb){var v=row[mb]||0;tots[mb]+=v;h+=v>0?'<td class="paid">\u20b9'+v+' \u2705</td>':'<td class="unpaid">\u2014 \u274c</td>';});h+='</tr>';});
+var grand=0;h+='<tr class="t-row"><td class="td-n">Total</td>';
+mbs.forEach(function(mb){h+='<td>\u20b9'+tots[mb].toLocaleString('en-IN')+'</td>';grand+=tots[mb];});
+h+='</tr><tr class="t-row"><td class="td-n" colspan="9" style="text-align:right;">Grand Total: <b>\u20b9'+grand.toLocaleString('en-IN')+'</b></td></tr>';body.innerHTML=h;}
+
+function tcc(){return document.body.classList.contains('light-mode')?'#333':'#E0E0E0';}
+function gcc(){return document.body.classList.contains('light-mode')?'rgba(0,0,0,0.06)':'rgba(255,255,255,0.05)';}
+function upCh(){if(!yC||!mC||!pC)return;[yC,mC,pC].forEach(function(c){if(c.options.scales)Object.keys(c.options.scales).forEach(function(k){if(c.options.scales[k].ticks)c.options.scales[k].ticks.color=tcc();if(c.options.scales[k].grid)c.options.scales[k].grid.color=gcc();});c.update();});}
+
+
+function handleXL(e){var file=e.target.files[0];if(!file)return;if(typeof XLSX==='undefined'){alert('SheetJS library not loaded. Please check your internet connection and reload the page.');return;}var reader=new FileReader();reader.onload=function(ev){var _ts=document.getElementById('topStatus');if(_ts){_ts.style.display='block';_ts.style.background='linear-gradient(90deg,#1a1a2e,#2d1b69)';_ts.textContent='⏳ Processing Excel...';}try{var data=new Uint8Array(ev.target.result);var wb=XLSX.read(data,{type:'array'});xlD={};wb.SheetNames.forEach(function(sn){xlD[sn]=XLSX.utils.sheet_to_json(wb.Sheets[sn]);});applyXL();if(_ts){_ts.textContent='✅ Dashboard Loaded!';_ts.style.background='#1b5e20';setTimeout(function(){_ts.style.opacity='0';setTimeout(function(){_ts.style.display='none';_ts.style.opacity='1';},600);},4000);}}catch(err){if(_ts){_ts.textContent='❌ Error: '+err.message;_ts.style.background='#b71c1c';}alert('Error: '+err.message);}};reader.readAsArrayBuffer(file);}
+
+function applyXL(){
+if(!xlD)return;
+try{
+var sM=findSheet(xlD,['master']);
+var sP=findSheet(xlD,['pending']);
+var s23=findSheet(xlD,['2023']);
+var s24=findSheet(xlD,['2024']);
+var s25=findSheet(xlD,['2025']);
+var s26=findSheet(xlD,['2026']);
+var sG1=findSheet(xlD,['gold-1','gold 1','for gold-1']);
+var sG2=findSheet(xlD,['gold-2','gold 2','for gold-2']);
+var log=[];
+var accountVal=0,goldVal=0,pendingVal=0,totalAmount=0;
+
+if(sM){
+var rows=xlD[sM];
+var allK={};rows.forEach(function(r){Object.keys(r).forEach(function(k){allK[k]=1;});});
+var cols=Object.keys(allK);
+var nameCol=null;
+cols.forEach(function(c){var cl=String(c).toLowerCase().trim();if(cl==='name'||cl==='names'||cl==='member')nameCol=c;});
+if(!nameCol){cols.forEach(function(c){if(!nameCol&&!/^\d+$/.test(String(c).trim())&&String(c).toLowerCase().trim()!=='total')nameCol=c;});}
+if(!nameCol)nameCol=cols[0];if(/^\d{4}$/.test(String(nameCol).trim())){for(var ci=0;ci<cols.length;ci++){var cc=String(cols[ci]).trim();if(!/^\d+$/.test(cc)&&cc.toLowerCase()!=='total'){nameCol=cols[ci];break;}}}
+var memberRows=[],metaMap={},hitTotal=false;
+rows.forEach(function(r){
+var nm=String(r[nameCol]||'').trim();if(!nm)return;
+var nmL=nm.toLowerCase().trim();
+if(!hitTotal){if(nmL==='total'){hitTotal=true;metaMap[nmL]=r;}else{memberRows.push(r);}}
+else{metaMap[nmL]=r;}
+});
+
+var yearCols={};
+cols.forEach(function(c){var cs=String(c).trim();if(cs==='2023'||cs==='2024'||cs==='2025'||cs==='2026')yearCols[cs]=c;});
+var totalCol=null;
+cols.forEach(function(c){if(String(c).toLowerCase().trim()==='total')totalCol=c;});
+var yearTotals={2023:0,2024:0,2025:0,2026:0};
+var memberTotals={},grandTotal=0;
+
+var mHTML='';
+memberRows.forEach(function(r){
+var nm=String(r[nameCol]||'').trim();var sn=shortName(nm);var tot=0;
+mHTML+='<tr><td class="td-n">'+nm+'</td>';
+['2023','2024','2025','2026'].forEach(function(y){
+var v=pNum(r[yearCols[y]||y]);yearTotals[y]+=v;tot+=v;
+mHTML+='<td>'+fmt(v)+'</td>';
+});
+var rowTotal=totalCol?pNum(r[totalCol]):tot;
+grandTotal+=rowTotal;memberTotals[sn]=rowTotal;
+mHTML+='<td><b>'+fmt(rowTotal)+'</b></td></tr>';
+});
+mHTML+='<tr class="t-row"><td class="td-n">TOTAL</td>';
+['2023','2024','2025','2026'].forEach(function(y){mHTML+='<td>'+fmt(yearTotals[y])+'</td>';});
+mHTML+='<td><b>'+fmt(grandTotal)+'</b></td></tr>';
+var mTbl=document.querySelector('#members tbody');
+if(mTbl)mTbl.innerHTML=mHTML;
+
+function getMeta(keys){
+for(var i=0;i<keys.length;i++){var k=keys[i].toLowerCase();
+for(var mk in metaMap){if(mk.indexOf(k)>=0){
+var r=metaMap[mk];for(var c in r){if(c!==nameCol){var v=pNum(r[c]);if(v!==0)return v;}}
+}}}return 0;}
+function getMetaRow(keys){for(var i=0;i<keys.length;i++){var k=keys[i].toLowerCase();for(var mk in metaMap){if(mk.indexOf(k)>=0)return metaMap[mk];}}return null;}
+function extractRowData(row){var nums=[],texts=[];if(!row)return{nums:nums,texts:texts};for(var c in row){if(c===nameCol)continue;var v=row[c];if(v===undefined||v===null||v==='')continue;var n=pNum(v);if(n!==0){nums.push(n);}else if(typeof v==='string'&&v.trim()){texts.push(v.trim());}}return{nums:nums,texts:texts};}
+
+totalAmount=getMeta(['total amount']);
+accountVal=getMeta(['account']);
+goldVal=getMeta(['form of gold']);
+pendingVal=getMeta(['pending amount']);
+var cards=document.querySelectorAll('.sc');
+if(cards[0])cards[0].querySelector('.sc-val').textContent=fmt(totalAmount||grandTotal);
+if(cards[1])cards[1].querySelector('.sc-val').textContent=fmt(accountVal);
+if(cards[2])cards[2].querySelector('.sc-val').textContent=fmt(goldVal);
+var heroBadge=document.querySelector('.hero .badge');
+if(heroBadge){var yrs=Object.keys(yearCols).sort();heroBadge.textContent=memberRows.length+' Members \u00b7 Est. '+(yrs[0]||'2023')+' \u00b7 Updated '+new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'});}
+var goldNoteRow=getMetaRow(['form of gold']);
+if(goldNoteRow){var gnD=extractRowData(goldNoteRow);if(cards[2]&&gnD.texts.length>0){var sub3=cards[2].querySelector('.sc-sub');if(sub3)sub3.textContent=gnD.texts.join(' \u00b7 ');}}
+if(yC){yC.destroy();yC=null;}
+var c1x=document.getElementById('yChart').getContext('2d');
+var gg1=c1x.createLinearGradient(0,0,0,300);gg1.addColorStop(0,'#4FC3F7');gg1.addColorStop(1,'rgba(79,195,247,0.2)');
+var gg2=c1x.createLinearGradient(0,0,0,300);gg2.addColorStop(0,'#00E676');gg2.addColorStop(1,'rgba(0,230,118,0.2)');
+var gg3=c1x.createLinearGradient(0,0,0,300);gg3.addColorStop(0,'#FFD700');gg3.addColorStop(1,'rgba(255,215,0,0.2)');
+var gg4=c1x.createLinearGradient(0,0,0,300);gg4.addColorStop(0,'#FF6B6B');gg4.addColorStop(1,'rgba(255,107,107,0.2)');
+var yArr=[yearTotals[2023],yearTotals[2024],yearTotals[2025],yearTotals[2026]];
+var yMax=Math.ceil(Math.max.apply(null,yArr)/10000)*10000+8000;
+yC=new Chart(c1x,{type:'bar',data:{labels:['2023','2024','2025','2026'],datasets:[{data:yArr,backgroundColor:[gg1,gg2,gg3,gg4],borderColor:['#4FC3F7','#00E676','#FFD700','#FF6B6B'],borderWidth:2,borderRadius:14,borderSkipped:false,barPercentage:0.65}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return fmt(c.parsed.y);}}},datalabels:{anchor:'end',align:'end',offset:6,color:function(){return tcc();},font:{family:'Poppins',size:window.innerWidth<768?10:14,weight:'900'},formatter:function(v){return fmt(v);}}},scales:{x:{ticks:{color:tcc(),font:{family:'Poppins',weight:'700'}},grid:{display:false}},y:{beginAtZero:true,max:yMax,ticks:{color:tcc(),callback:function(v){return fmt(v);}},grid:{color:gcc()}}}}});
+var chTot=document.querySelector('.ch-total b');if(chTot)chTot.textContent=fmt(yArr.reduce(function(a,b){return a+b;},0));
+var dNm=[],dVl=[];
+var dColors=['#4FC3F7','#FF6B6B','#00E676','#FFD700','#CE93D8','#FFB74D','#4DB6AC','#FF8A65'];
+var dBorders=['#039BE5','#E53935','#00C853','#FFB300','#AB47BC','#F57C00','#00897B','#F4511E'];
+memberRows.forEach(function(r){var nm=String(r[nameCol]||'').trim();var sn=shortName(nm);dNm.push(sn);dVl.push(memberTotals[sn]||0);});
+var dTotal=dVl.reduce(function(a,b){return a+b;},0);
+if(mC){mC.destroy();mC=null;}
+var c2x=document.getElementById('mChart').getContext('2d');
+mC=new Chart(c2x,{type:'doughnut',data:{labels:dNm,datasets:[{data:dVl,backgroundColor:dColors.slice(0,dNm.length),borderColor:dBorders.slice(0,dNm.length),borderWidth:3,hoverOffset:15,spacing:3}]},options:{responsive:true,cutout:'55%',plugins:{legend:{display:false},datalabels:{display:false}}},plugins:[{id:'ctr',beforeDraw:function(ch){var ctx=ch.ctx;var ar=ch.chartArea;var cx=(ar.left+ar.right)/2;var cy=(ar.top+ar.bottom)/2;ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='500 13px Poppins';ctx.fillStyle=document.body.classList.contains('light-mode')?'#666':'#B0BEC5';ctx.fillText('Total Fund',cx,cy-14);ctx.font='900 22px Poppins';ctx.fillStyle=document.body.classList.contains('light-mode')?'#B8860B':'#FFD700';ctx.fillText(fmt(dTotal),cx,cy+14);ctx.restore();}}]});
+var legH='';
+dNm.forEach(function(name,i){var pct=dTotal>0?((dVl[i]/dTotal)*100).toFixed(1):'0.0';legH+='<div class="dl-item"><div class="dl-dot" style="background:'+dColors[i]+';border:2px solid '+dBorders[i]+';"></div><div class="dl-info"><span class="dl-name">'+name+'</span><span class="dl-amt">'+fmt(dVl[i])+' <span class="dl-pct">('+pct+'%)</span></span></div></div>';});
+document.getElementById('dLeg').innerHTML=legH;
+var cardKeysSkip=['total','account','form of gold','pending amount','total amount'];
+var exHTML='';
+for(var mk in metaMap){
+var skipIt=false;
+for(var ci2=0;ci2<cardKeysSkip.length;ci2++){if(mk===cardKeysSkip[ci2]||mk.indexOf(cardKeysSkip[ci2])>=0){skipIt=true;break;}}
+if(!skipIt&&(mk.indexOf('for gold-')===0||mk.indexOf('for gold ')===0||mk.indexOf('gold ')===0)){skipIt=true;}
+if(skipIt)continue;
+var exRow=metaMap[mk];var exD=extractRowData(exRow);
+if(exD.nums.length===0&&exD.texts.length===0)continue;
+var exLabel=mk.charAt(0).toUpperCase()+mk.slice(1);
+var exPrimary=exD.nums.length>0?exD.nums[0]:0;
+var exCls=exPrimary>=0?'epos':'eneg';
+var exSign=exPrimary>0?'+':'';
+exHTML+='<div class="ex"><div class="el">'+exLabel+'</div>';
+exHTML+='<div class="ev '+exCls+'">'+exSign+fmt(exPrimary)+'</div>';
+var subParts=[];for(var ni=1;ni<exD.nums.length;ni++){if(exD.nums[ni]!==0)subParts.push((exD.nums[ni]>0?'+':'')+fmt(exD.nums[ni]));}
+exD.texts.forEach(function(t){subParts.push(t);});
+if(subParts.length>0)exHTML+='<div class="en">'+subParts.join(' \u00b7 ')+'</div>';
+exHTML+='</div>';
+}
+var exGrid=document.querySelector('#extras .ex-grid');
+if(exGrid)exGrid.innerHTML=exHTML||'<div class="ex"><div class="el">No Extras</div><div class="ev">\u2014</div></div>';
+log.push('\u2705 Master: '+memberRows.length+' members');
+}
+
+// PENDING
+if(sP){
+var pRows=xlD[sP];var pCols=Object.keys(pRows[0]||{});
+var pNameCol=pCols[0],pPayCol=pCols[1],pGoldCol=pCols[2],pTotCol=pCols[3];
+var pendArr=[],gPay=0,gGold=0,gTot=0;
+pRows.forEach(function(r){
+var nm=String(r[pNameCol]||'').trim();
+if(!nm||nm.toLowerCase().indexOf('grand')>=0||nm.toLowerCase().indexOf('total')>=0)return;
+var pay=pNum(r[pPayCol]),gold=pNum(r[pGoldCol]),tot=pNum(r[pTotCol])||pay+gold;
+pendArr.push({n:shortName(nm),p:pay,g:gold,t:tot});gPay+=pay;gGold+=gold;gTot+=tot;
+});
+pendArr.sort(function(a,b){return b.t-a.t;});
+var pMax=pendArr.length?Math.max(pendArr[0].t,1000):1000;
+var pH='';
+pendArr.forEach(function(d){
+var pc=Math.min((d.t/pMax)*100,100);
+var bc='pbg';if(d.t>10000)bc='pbr';else if(d.t>7000)bc='pbo';else if(d.t>0)bc='pby';
+pH+='<tr><td class="td-n">'+d.n+'</td><td>'+fmt(d.p)+'</td><td>'+fmt(d.g)+'</td><td><b>'+fmt(d.t)+'</b></td>';
+pH+='<td><div class="pb-bg"><div class="pb-fill '+bc+'" style="width:'+pc+'%">'+(d.t>0?fmt(d.t):'\u2705')+'</div></div></td></tr>';
+});
+pH+='<tr class="t-row"><td class="td-n">Grand Total</td><td>'+fmt(gPay)+'</td><td>'+fmt(gGold)+'</td><td><b>'+fmt(gTot)+'</b></td><td></td></tr>';
+document.getElementById('pBod').innerHTML=pH;
+var card4=document.querySelectorAll('.sc')[3];
+if(card4){card4.querySelector('.sc-val').textContent=fmt(gTot);var sub4=card4.querySelector('.sc-sub');if(sub4)sub4.textContent='Pay '+fmt(gPay)+' + Gold '+fmt(gGold);}
+
+// Pending Chart
+if(pC){pC.destroy();pC=null;}
+var pNames=pendArr.map(function(d){return d.n;});
+var pVals=pendArr.map(function(d){return d.t;});
+var pCol2=pVals.map(function(v){if(v>10000)return 'rgba(255,107,107,0.85)';if(v>7000)return 'rgba(255,183,77,0.85)';if(v>0)return 'rgba(255,215,0,0.85)';return 'rgba(0,230,118,0.85)';});
+var pBrd2=pVals.map(function(v){if(v>10000)return '#E53935';if(v>7000)return '#F57C00';if(v>0)return '#FFB300';return '#00C853';});
+var c3x=document.getElementById('pChart').getContext('2d');
+pC=new Chart(c3x,{type:'bar',data:{labels:pNames,datasets:[{data:pVals,backgroundColor:pCol2,borderColor:pBrd2,borderWidth:2,borderRadius:10,borderSkipped:false,barPercentage:0.7}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.x===0?'\u2705 No Pending':'Pending: '+fmt(c.parsed.x);}}},datalabels:{anchor:'end',align:'end',offset:5,color:function(){return tcc();},font:{family:'Poppins',size:window.innerWidth<768?9:12,weight:'700'},formatter:function(v){return v===0?'\u2705':fmt(v);}}},scales:{x:{beginAtZero:true,max:Math.ceil(pMax/5000)*5000,ticks:{color:tcc(),callback:function(v){return fmt(v);}},grid:{color:gcc()}},y:{ticks:{color:tcc(),font:{family:'Poppins',weight:'600'}},grid:{display:false}}}}});
+log.push('\u2705 Pending: '+pendArr.length+' members');
+}
+
+// YEAR SHEETS
+var moMap={'january':'January','february':'February','march':'March','april':'April','may':'May','june':'June','jun':'June','july':'July','august':'August','september':'September','october':'October','november':'November','december':'December','jan':'January','feb':'February','mar':'March','apr':'April','jul':'July','aug':'August','sep':'September','oct':'October','nov':'November','dec':'December'};
+function parseYrSheet(sheetName){
+if(!sheetName)return null;
+var rows=xlD[sheetName];if(!rows||!rows.length)return null;
+var allKeys={};rows.forEach(function(r){Object.keys(r).forEach(function(k){allKeys[k]=1;});});
+var cols=Object.keys(allKeys);
+var monthCol=null;cols.forEach(function(c){if(c.toLowerCase().trim()==='month')monthCol=c;});
+if(!monthCol)monthCol=cols[0];
+var colMap={};
+cols.forEach(function(c){if(c===monthCol)return;var sn=shortName(c);if(mbs.indexOf(sn)>=0)colMap[c]=sn;});
+var data={};mos.forEach(function(m){data[m]={};mbs.forEach(function(mb){data[m][mb]=0;});});
+rows.forEach(function(r){
+var mRaw=String(r[monthCol]||'').trim().toLowerCase();
+var mName=moMap[mRaw];if(!mName)return;
+for(var c in colMap){data[mName][colMap[c]]=pNum(r[c]);}
+});
+return data;}
+[[s23,'b23',true],[s24,'b24',false],[s25,'b25',false],[s26,'b26',false]].forEach(function(s){
+var d=parseYrSheet(s[0]);if(d){rMo(s[1],d,s[2]);log.push('\u2705 '+s[0]+' loaded');}
+});
+
+// GOLD
+function parseGold(sheetName){
+if(!sheetName)return null;
+var rows=xlD[sheetName];if(!rows||!rows.length)return null;
+var allKeys={};rows.forEach(function(r){Object.keys(r).forEach(function(k){allKeys[k]=1;});});
+var cols=Object.keys(allKeys);
+var monthCol=null;cols.forEach(function(c){if(c.toLowerCase().trim()==='month')monthCol=c;});
+if(!monthCol)monthCol=cols[0];
+var collected=0,pending=0,note='';
+rows.forEach(function(r){
+var lbl=String(r[monthCol]||'').trim().toLowerCase();
+if(lbl.indexOf('collected')>=0){for(var c in r){if(c!==monthCol){var v=pNum(r[c]);if(v!==0)collected=Math.abs(v);}}}
+else if(lbl.indexOf('pending')>=0){for(var c in r){if(c!==monthCol){var v=pNum(r[c]);if(v!==0)pending=Math.abs(v);}}}
+else if(lbl.indexOf('note')>=0){note=String(r[monthCol]||'').trim();}
+});
+return{collected:collected,pending:pending,note:note};}
+var goldSheetNames=[];
+Object.keys(xlD).forEach(function(sk){var skl=sk.toLowerCase().trim();if(skl.indexOf('gold')>=0&&skl.indexOf('price')<0)goldSheetNames.push(sk);});
+var goldPriceMap={};
+for(var mk in metaMap){if(mk.indexOf('gold')>=0&&mk.indexOf('price')>=0){var gn=mk.replace(/[^0-9]/g,'');if(gn)goldPriceMap[gn]=metaMap[mk];}}
+var coveredGoldNums={};
+var goldHTML='';
+goldSheetNames.forEach(function(sk){
+var gn=sk.replace(/[^0-9]/g,'')||'1';
+coveredGoldNums[gn]=true;
+var gData=parseGold(sk);
+var pRow=goldPriceMap[gn];var prD=pRow?extractRowData(pRow):{nums:[],texts:[]};
+goldHTML+='<div class="gc"><h4>\uD83C\uDFF7\uFE0F '+sk+'</h4>';
+goldHTML+='<div class="gp">'+(prD.nums.length>0?fmt(prD.nums[0]):'\u2014')+'</div>';
+if(prD.texts.length>0)goldHTML+='<p><b>For:</b> '+prD.texts.join(', ')+'</p>';
+if(gData){
+goldHTML+='<p><b>Collected:</b> '+fmt(gData.collected)+'</p>';
+if(gData.pending>0){goldHTML+='<div class="gs" style="color:var(--red);">\u26A0\uFE0F Pending: '+fmt(gData.pending)+'</div>';}
+else{goldHTML+='<div class="gs" style="color:var(--green);">\u2705 Fully Collected</div>';}
+if(gData.note)goldHTML+='<p style="font-size:0.78rem;color:var(--text3);margin-top:6px;font-style:italic;">'+gData.note+'</p>';
+}
+goldHTML+='</div>';
+});
+for(var gpn in goldPriceMap){
+if(coveredGoldNums[gpn])continue;
+var pRow2=goldPriceMap[gpn];var prD2=extractRowData(pRow2);
+goldHTML+='<div class="gc"><h4>\uD83C\uDFF7\uFE0F GOLD-'+gpn+' (Investment)</h4>';
+goldHTML+='<div class="gp">'+(prD2.nums.length>0?fmt(prD2.nums[0]):'\u2014')+'</div>';
+if(prD2.texts.length>0)goldHTML+='<p><b>For:</b> '+prD2.texts.join(', ')+'</p>';
+goldHTML+='<div class="gs" style="color:var(--green);">\u2705 Purchased & Secured</div>';
+goldHTML+='</div>';
+}
+var goldGrid=document.querySelector('#gold .g-grid');
+if(goldGrid&&goldHTML)goldGrid.innerHTML=goldHTML;
+alert('\u2705 Dashboard Updated!\n\n'+log.join('\n'));
+window.scrollTo({top:0,behavior:'smooth'});
+}catch(err){alert('\u274c Error: '+err.message);console.error(err);}
+}
+
+function dlTemplate(){
+var wb=XLSX.utils.book_new();
+var hd=[['Month','Abbas & Alefiya','Abdul & Mariya','Burhan & Khadija','Hozefa & Fatema','Shabbir & Shirin','Mustufa & Amatullah','Murtaza & Insiya','Hakim & Zohra']];
+mos.forEach(function(m){hd.push([m,0,0,0,0,0,0,0,0]);});
+hd.push(['Total','','','','','','','','']);
+var ws=XLSX.utils.aoa_to_sheet(hd);XLSX.utils.book_append_sheet(wb,ws,'2025');
+XLSX.writeFile(wb,'UNITED_Template.xlsx');
+}
+
+function saveGHUrl(){var url=document.getElementById('ghUrl').value.trim();if(url){localStorage.setItem('unitedGithubUrl',url);alert('\u2705 URL saved!');}else{alert('Enter a URL first.');}}
+function fetchGH(){if(typeof XLSX==='undefined'){alert('SheetJS not loaded. Reload page.');return;}var url=document.getElementById('ghUrl').value.trim();if(!url){alert('Enter GitHub raw URL.');return;}var ts=document.getElementById('topStatus');if(ts){ts.style.display='block';ts.style.background='linear-gradient(90deg,#1a1a2e,#2d1b69)';ts.textContent='⏳ Fetching from GitHub...';}var fu=url+(url.indexOf('?')>-1?'&':'?')+'t='+Date.now();fetch(fu,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();}).then(function(buf){var wb=XLSX.read(new Uint8Array(buf),{type:'array'});xlD={};wb.SheetNames.forEach(function(sn){xlD[sn]=XLSX.utils.sheet_to_json(wb.Sheets[sn]);});applyXL();if(ts){ts.textContent='✅ Dashboard Loaded!';ts.style.background='#1b5e20';setTimeout(function(){ts.style.opacity='0';setTimeout(function(){ts.style.display='none';ts.style.opacity='1';},600);},4000);}}).catch(function(err){console.error('fetchGH:',err);if(ts){ts.textContent='❌ Fetch Failed: '+err.message;ts.style.background='#b71c1c';}});}
+(function(){var u='https://raw.githubusercontent.com/hozefa111/Excel/main/%F0%9F%8C%9FUNITED%F0%9F%8C%9F.xlsx';document.getElementById('ghUrl').value=u;var ts=document.getElementById('topStatus');if(ts)ts.textContent='📦 Loading XLSX library...';var a=0;var p=setInterval(function(){a++;if(typeof XLSX!=='undefined'){clearInterval(p);if(ts)ts.textContent='🌐 XLSX loaded! Fetching data...';fetchGH();}else if(a>=30){clearInterval(p);if(ts){ts.textContent='❌ XLSX library failed. Check internet & reload.';ts.style.background='#b71c1c';}}},500);})();();
+
+(function(){var a=document.querySelectorAll('.anim');if('IntersectionObserver' in window){var o=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){en.target.classList.add('visible');o.unobserve(en.target);}});},{threshold:0.12});a.forEach(function(el){o.observe(el);});}else{a.forEach(function(el){el.classList.add('visible');});}})();
+function staggerReveal(ps,cs,d){document.querySelectorAll(ps).forEach(function(p){var so=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){en.target.querySelectorAll(cs).forEach(function(ch,i){ch.style.opacity='0';ch.style.transform='translateY(25px)';ch.style.transition='opacity 0.5s ease '+(i*d)+'s,transform 0.5s ease '+(i*d)+'s';setTimeout(function(){ch.style.opacity='1';ch.style.transform='translateY(0)';},50);});so.unobserve(en.target);}});},{threshold:0.15});so.observe(p);});}
+staggerReveal('.sum-grid','.sc',0.12);staggerReveal('.g-grid','.gc',0.15);staggerReveal('.ex-grid','.ex',0.1);staggerReveal('.dl-grid','.dl-item',0.08);
+</script>
+</body>
+</html>
