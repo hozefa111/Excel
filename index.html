@@ -556,6 +556,7 @@ else if(lbl.indexOf('pending')>=0){for(var c in r){if(c!==monthCol){var v=pNum(r
 else if(lbl.indexOf('note')>=0){note=String(r[monthCol]||'').trim();}
 });
 return{collected:collected,pending:pending,note:note};}
+function getGoldPrice(nums){for(var i=0;i<nums.length;i++){if(nums[i]>0&&nums[i]<40000)return nums[i];}return nums[0]||0;}
 var goldSheetNames=[];
 Object.keys(xlD).forEach(function(sk){var skl=sk.toLowerCase().trim();if(skl.indexOf('gold')>=0&&skl.indexOf('price')<0)goldSheetNames.push(sk);});
 var goldPriceMap={};
@@ -568,7 +569,7 @@ coveredGoldNums[gn]=true;
 var gData=parseGold(sk);
 var pRow=goldPriceMap[gn];var prD=pRow?extractRowData(pRow):{nums:[],texts:[]};
 goldHTML+='<div class="gc"><h4>\uD83C\uDFF7\uFE0F '+sk+'</h4>';
-goldHTML+='<div class="gp">'+(prD.nums.length>0?fmt(prD.nums[0]):'\u2014')+'</div>';
+goldHTML+='<div class="gp">'+(prD.nums.length>0?fmt(getGoldPrice(prD.nums)):'\u2014')+'</div>';
 if(prD.texts.length>0)goldHTML+='<p><b>For:</b> '+prD.texts.join(', ')+'</p>';
 if(gData){
 goldHTML+='<p><b>Collected:</b> '+fmt(gData.collected)+'</p>';
@@ -582,7 +583,7 @@ for(var gpn in goldPriceMap){
 if(coveredGoldNums[gpn])continue;
 var pRow2=goldPriceMap[gpn];var prD2=extractRowData(pRow2);
 goldHTML+='<div class="gc"><h4>\uD83C\uDFF7\uFE0F GOLD-'+gpn+' (Investment)</h4>';
-goldHTML+='<div class="gp">'+(prD2.nums.length>0?fmt(prD2.nums[0]):'\u2014')+'</div>';
+goldHTML+='<div class="gp">'+(prD2.nums.length>0?fmt(getGoldPrice(prD2.nums)):'\u2014')+'</div>';
 if(prD2.texts.length>0)goldHTML+='<p><b>For:</b> '+prD2.texts.join(', ')+'</p>';
 goldHTML+='<div class="gs" style="color:var(--green);">\u2705 Purchased & Secured</div>';
 goldHTML+='</div>';
