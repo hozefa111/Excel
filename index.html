@@ -242,7 +242,7 @@ table{font-size:0.84rem;}th{padding:11px 10px;font-size:0.73rem;}td{padding:10px
 <nav class="nav">
 <div class="nav-brand">🌟 UNITED</div>
 <div class="nav-links">
-<a href="#overview" class="nav-link">Overview</a><a href="#charts" class="nav-link">Charts</a><a href="#members" class="nav-link">Members</a><a href="#pending" class="nav-link">Pending</a><a href="#gold" class="nav-link">Gold</a><a href="#monthly" class="nav-link">Monthly</a><a href="#extras" class="nav-link">Extras</a><a href="#upload" class="nav-link">Upload</a>
+<a href="#overview" class="nav-link">Overview</a><a href="#charts" class="nav-link">Charts</a><a href="#members" class="nav-link">Members</a><a href="#pending" class="nav-link">Pending</a><a href="#gold" class="nav-link">Gold</a><a href="#monthly" class="nav-link">Monthly</a><a href="#extras" class="nav-link">Extras</a>
 </div>
 <div class="nav-ctrls">
 <button class="nav-btn" onclick="document.body.classList.toggle('light-mode');upCh();" title="Theme">🌓</button>
@@ -326,24 +326,8 @@ table{font-size:0.84rem;}th{padding:11px 10px;font-size:0.73rem;}td{padding:10px
 </div>
 </div>
 
-<!-- UPLOAD -->
-<div class="section anim" id="upload">
-<div class="s-header"><div class="s-icon" style="background:rgba(77,182,172,0.12);color:var(--teal);">📤</div><div class="s-title">Excel Upload & Sync</div></div>
-<div id="xlsxError" class="xlsx-err">⚠️ SheetJS library failed to load. Excel upload requires internet. Please check your connection and reload.</div>
-<div class="uz" onclick="document.getElementById('exF').click()">
-<div class="ui">📁</div>
-<div class="ut">Tap to Upload Excel File</div>
-<div class="us">Supports .xlsx and .xls</div>
-<input type="file" id="exF" accept=".xlsx,.xls" onchange="handleXL(event)">
-</div>
-<div class="uact">
-<button class="ubtn" onclick="dlTemplate()">📥 Download Template</button>
-
-</div>
-<div class="ibox" style="margin-top:18px;"><h4>GitHub Auto-Sync</h4><div style="display:flex;gap:10px;flex-wrap:wrap;"><input type="text" id="ghUrl" value="https://hozefa111.github.io/Excel/%F0%9F%8C%9FUNITED%F0%9F%8C%9F.xlsx" placeholder="GitHub raw .xlsx URL..." style="flex:1;min-width:200px;padding:10px;border-radius:10px;border:1.5px solid var(--border);background:rgba(255,255,255,0.05);color:var(--text);font-family:Poppins;"><button class="ubtn" onclick="saveGHUrl()">Save</button><button class="ubtn ubtn-p" onclick="fetchGH()">Fetch</button></div></div>
-
-
-</div>
+<div id="xlsxError" class="xlsx-err" style="margin:0 20px 20px;">⚠️ SheetJS library failed to load. Please check your internet connection and reload.</div>
+<input type="text" id="ghUrl" value="https://hozefa111.github.io/Excel/%F0%9F%8C%9FUNITED%F0%9F%8C%9F.xlsx" style="display:none;">
 
 </div>
 <div class="footer">🌟 UNITED Group Savings Fund Dashboard · May 2026 · Made with ❤️</div>
