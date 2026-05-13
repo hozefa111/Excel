@@ -457,18 +457,26 @@ dNm.forEach(function(name,i){var pct=dTotal>0?((dVl[i]/dTotal)*100).toFixed(1):'
 document.getElementById('dLeg').innerHTML=legH;
 var cardKeysSkip=['total','account','form of gold','pending amount','total amount'];
 var exHTML='';
+var currentCategory='';
 for(var mk in metaMap){
 var skipIt=false;
 for(var ci2=0;ci2<cardKeysSkip.length;ci2++){if(mk===cardKeysSkip[ci2]||mk.indexOf(cardKeysSkip[ci2])>=0){skipIt=true;break;}}
 if(!skipIt&&(mk.indexOf('for gold-')===0||mk.indexOf('for gold ')===0||mk.indexOf('gold ')===0)){skipIt=true;}
 if(skipIt)continue;
 var exRow=metaMap[mk];var exD=extractRowData(exRow);
-if(exD.nums.length===0&&exD.texts.length===0)continue;
+// Label-only row = category header
+if(exD.nums.length===0&&exD.texts.length===0){
+var rawLabel=mk.indexOf('__blank_')===0?'':mk.charAt(0).toUpperCase()+mk.slice(1);
+if(rawLabel)currentCategory=rawLabel;
+continue;
+}
 var exLabel=mk.indexOf('__blank_')===0?(exD.texts.length>0?exD.texts[0]:'Adjustment'):mk.charAt(0).toUpperCase()+mk.slice(1);
+var catTag=currentCategory?'<div style="font-size:0.68rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:2px;">'+currentCategory+'</div>':'';
+currentCategory='';
 var exPrimary=exD.nums.length>0?exD.nums[0]:0;
 var exCls=exPrimary>=0?'epos':'eneg';
 var exSign=exPrimary>0?'+':'';
-exHTML+='<div class="ex"><div class="el">'+exLabel+'</div>';
+exHTML+='<div class="ex">'+catTag+'<div class="el">'+exLabel+'</div>';
 exHTML+='<div class="ev '+exCls+'">'+exSign+fmt(exPrimary)+'</div>';
 var subParts=[];for(var ni=1;ni<exD.nums.length;ni++){if(exD.nums[ni]!==0)subParts.push((exD.nums[ni]>0?'+':'')+fmt(exD.nums[ni]));}
 exD.texts.forEach(function(t){subParts.push(t);});
