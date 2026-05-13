@@ -306,16 +306,8 @@ table{font-size:0.84rem;}th{padding:11px 10px;font-size:0.73rem;}td{padding:10px
 <!-- MONTHLY -->
 <div class="section anim" id="monthly">
 <div class="s-header"><div class="s-icon" style="background:rgba(0,230,118,0.12);color:var(--green);">📅</div><div class="s-title">Monthly Payment Breakdown</div></div>
-<div class="tabs">
-<button class="tb active" onclick="sTab('t23',this)">📆 2023</button>
-<button class="tb" onclick="sTab('t24',this)">📆 2024</button>
-<button class="tb" onclick="sTab('t25',this)">📆 2025</button>
-<button class="tb" onclick="sTab('t26',this)">📆 2026</button>
-</div>
-<div id="t23" class="tc active"><p style="margin-bottom:10px;color:var(--text2);font-size:0.86rem;">💰 Rate: <b style="color:var(--gold);">₹200/month</b> · May – Dec 2023</p><div class="tbl-wrap"><table><thead><tr><th style="text-align:left;">Month</th><th>Abbas</th><th>Abdul</th><th>Burhan</th><th>Hozefa</th><th>Shabbir</th><th>Mustufa</th><th>Murtaza</th><th>Hakim</th></tr></thead><tbody id="b23"></tbody></table></div></div>
-<div id="t24" class="tc"><p style="margin-bottom:10px;color:var(--text2);font-size:0.86rem;">💰 Rate: <b style="color:var(--gold);">₹400/month</b> · Jan – Dec 2024</p><div class="tbl-wrap"><table><thead><tr><th style="text-align:left;">Month</th><th>Abbas</th><th>Abdul</th><th>Burhan</th><th>Hozefa</th><th>Shabbir</th><th>Mustufa</th><th>Murtaza</th><th>Hakim</th></tr></thead><tbody id="b24"></tbody></table></div></div>
-<div id="t25" class="tc"><p style="margin-bottom:10px;color:var(--text2);font-size:0.86rem;">💰 Rate: <b style="color:var(--gold);">₹400/month</b> · Jan – Dec 2025</p><div class="tbl-wrap"><table><thead><tr><th style="text-align:left;">Month</th><th>Abbas</th><th>Abdul</th><th>Burhan</th><th>Hozefa</th><th>Shabbir</th><th>Mustufa</th><th>Murtaza</th><th>Hakim</th></tr></thead><tbody id="b25"></tbody></table></div></div>
-<div id="t26" class="tc"><p style="margin-bottom:10px;color:var(--text2);font-size:0.86rem;">💰 Rate: <b style="color:var(--gold);">₹400/month</b> · Jan – Dec 2026</p><div class="tbl-wrap"><table><thead><tr><th style="text-align:left;">Month</th><th>Abbas</th><th>Abdul</th><th>Burhan</th><th>Hozefa</th><th>Shabbir</th><th>Mustufa</th><th>Murtaza</th><th>Hakim</th></tr></thead><tbody id="b26"></tbody></table></div></div>
+<div class="tabs" id="monthlyTabs"></div>
+<div id="monthlyPanels"></div>
 </div>
 
 <!-- EXTRAS -->
@@ -339,11 +331,11 @@ var xlD=null,yC=null,mC=null,pC=null;
 function fmt(v){return '\u20b9'+Number(v||0).toLocaleString('en-IN');}
 function pNum(v){if(typeof v==='number')return v;if(!v)return 0;return Number(String(v).replace(/[\u20b9,\s]/g,''))||0;}
 function findSheet(obj,p){var k=Object.keys(obj);for(var j=0;j<p.length;j++)for(var i=0;i<k.length;i++)if(k[i].toLowerCase().trim().indexOf(p[j].toLowerCase())>=0)return k[i];return null;}
-function shortName(f){var s=String(f).trim().split(/[\s&]+/)[0].trim();if(!s)return '';var m={murtaza:'Murtaza',murtuza:'Murtaza',abbas:'Abbas',abdul:'Abdul',burhan:'Burhan',hozefa:'Hozefa',shabbir:'Shabbir',mustufa:'Mustufa',hakim:'Hakim'};return m[s.toLowerCase()]||s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();}
+function shortName(f){var s=String(f).trim().split(/[\s&\/]+/)[0].trim();if(!s)return '';return s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();}
 function sTab(id,btn){document.querySelectorAll('.tc').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.tb').forEach(function(b){b.classList.remove('active');});document.getElementById(id).classList.add('active');btn.classList.add('active');}
 
 var mos=['January','February','March','April','May','June','July','August','September','October','November','December'];
-var mbs=['Abbas','Abdul','Burhan','Hozefa','Shabbir','Mustufa','Murtaza','Hakim'];
+var mbs=[];
 function bld(r,fn){var d={};mos.forEach(function(m,i){d[m]={};mbs.forEach(function(mb){d[m][mb]=fn(mb,i,r);});});return d;}
 
 function rMo(bId,data,skip){
@@ -352,7 +344,7 @@ mbs.forEach(function(mb){tots[mb]=0;});
 mos.forEach(function(m){var row=data[m];if(!row)return;var any=mbs.some(function(mb){return row[mb]>0;});if(skip&&!any)return;h+='<tr><td class="td-n">'+m+'</td>';mbs.forEach(function(mb){var v=row[mb]||0;tots[mb]+=v;h+=v>0?'<td class="paid">\u20b9'+v+' \u2705</td>':'<td class="unpaid">\u2014 \u274c</td>';});h+='</tr>';});
 var grand=0;h+='<tr class="t-row"><td class="td-n">Total</td>';
 mbs.forEach(function(mb){h+='<td>\u20b9'+tots[mb].toLocaleString('en-IN')+'</td>';grand+=tots[mb];});
-h+='</tr><tr class="t-row"><td class="td-n" colspan="9" style="text-align:right;">Grand Total: <b>\u20b9'+grand.toLocaleString('en-IN')+'</b></td></tr>';body.innerHTML=h;}
+h+='</tr><tr class="t-row"><td class="td-n" colspan="'+(mbs.length+1)+'" style="text-align:right;">Grand Total: <b>\u20b9'+grand.toLocaleString('en-IN')+'</b></td></tr>';body.innerHTML=h;}
 
 function tcc(){return document.body.classList.contains('light-mode')?'#333':'#E0E0E0';}
 function gcc(){return document.body.classList.contains('light-mode')?'rgba(0,0,0,0.06)':'rgba(255,255,255,0.05)';}
@@ -366,14 +358,9 @@ if(!xlD)return;
 try{
 var sM=findSheet(xlD,['master']);
 var sP=findSheet(xlD,['pending']);
-var s23=findSheet(xlD,['2023']);
-var s24=findSheet(xlD,['2024']);
-var s25=findSheet(xlD,['2025']);
-var s26=findSheet(xlD,['2026']);
-var sG1=findSheet(xlD,['gold-1','gold 1','for gold-1']);
-var sG2=findSheet(xlD,['gold-2','gold 2','for gold-2']);
+
 var log=[];
-var accountVal=0,goldVal=0,pendingVal=0,totalAmount=0;
+var accountVal=0,goldVal=0,totalAmount=0;
 
 if(sM){
 var rows=xlD[sM];
@@ -397,17 +384,23 @@ metaMap[nmL2]=r;
 });
 
 var yearCols={};
-cols.forEach(function(c){var cs=String(c).trim();if(cs==='2023'||cs==='2024'||cs==='2025'||cs==='2026')yearCols[cs]=c;});
+cols.forEach(function(c){var cs=String(c).trim();if(/^20\d\d$/.test(cs))yearCols[cs]=c;});
+var sortedYears=Object.keys(yearCols).sort();
 var totalCol=null;
 cols.forEach(function(c){if(String(c).toLowerCase().trim()==='total')totalCol=c;});
-var yearTotals={2023:0,2024:0,2025:0,2026:0};
+var yearTotals={};sortedYears.forEach(function(y){yearTotals[y]=0;});
 var memberTotals={},grandTotal=0;
 
+// Set mbs dynamically from master sheet
+mbs=memberRows.map(function(r){return shortName(String(r[nameCol]||'').trim());});
+// Update members table header dynamically
+var mTblHead=document.querySelector('#members thead tr');
+if(mTblHead){var hh='<th style="text-align:left;">Name</th>';sortedYears.forEach(function(y){hh+='<th>'+y+'</th>';});hh+='<th>Total</th>';mTblHead.innerHTML=hh;}
 var mHTML='';
 memberRows.forEach(function(r){
 var nm=String(r[nameCol]||'').trim();var sn=shortName(nm);var tot=0;
 mHTML+='<tr><td class="td-n">'+nm+'</td>';
-['2023','2024','2025','2026'].forEach(function(y){
+sortedYears.forEach(function(y){
 var v=pNum(r[yearCols[y]||y]);yearTotals[y]+=v;tot+=v;
 mHTML+='<td>'+fmt(v)+'</td>';
 });
@@ -416,7 +409,7 @@ grandTotal+=rowTotal;memberTotals[sn]=rowTotal;
 mHTML+='<td><b>'+fmt(rowTotal)+'</b></td></tr>';
 });
 mHTML+='<tr class="t-row"><td class="td-n">TOTAL</td>';
-['2023','2024','2025','2026'].forEach(function(y){mHTML+='<td>'+fmt(yearTotals[y])+'</td>';});
+sortedYears.forEach(function(y){mHTML+='<td>'+fmt(yearTotals[y])+'</td>';});
 mHTML+='<td><b>'+fmt(grandTotal)+'</b></td></tr>';
 var mTbl=document.querySelector('#members tbody');
 if(mTbl)mTbl.innerHTML=mHTML;
@@ -447,9 +440,9 @@ var gg1=c1x.createLinearGradient(0,0,0,300);gg1.addColorStop(0,'#4FC3F7');gg1.ad
 var gg2=c1x.createLinearGradient(0,0,0,300);gg2.addColorStop(0,'#00E676');gg2.addColorStop(1,'rgba(0,230,118,0.2)');
 var gg3=c1x.createLinearGradient(0,0,0,300);gg3.addColorStop(0,'#FFD700');gg3.addColorStop(1,'rgba(255,215,0,0.2)');
 var gg4=c1x.createLinearGradient(0,0,0,300);gg4.addColorStop(0,'#FF6B6B');gg4.addColorStop(1,'rgba(255,107,107,0.2)');
-var yArr=[yearTotals[2023],yearTotals[2024],yearTotals[2025],yearTotals[2026]];
-var yMax=Math.ceil(Math.max.apply(null,yArr)/10000)*10000+8000;
-yC=new Chart(c1x,{type:'bar',data:{labels:['2023','2024','2025','2026'],datasets:[{data:yArr,backgroundColor:[gg1,gg2,gg3,gg4],borderColor:['#4FC3F7','#00E676','#FFD700','#FF6B6B'],borderWidth:2,borderRadius:14,borderSkipped:false,barPercentage:0.65}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return fmt(c.parsed.y);}}},datalabels:{anchor:'end',align:'end',offset:6,color:function(){return tcc();},font:{family:'Poppins',size:window.innerWidth<768?10:14,weight:'900'},formatter:function(v){return fmt(v);}}},scales:{x:{ticks:{color:tcc(),font:{family:'Poppins',weight:'700'}},grid:{display:false}},y:{beginAtZero:true,max:yMax,ticks:{color:tcc(),callback:function(v){return fmt(v);}},grid:{color:gcc()}}}}});
+var yArr=sortedYears.map(function(y){return yearTotals[y]||0;});
+var yMax=yArr.length&&Math.max.apply(null,yArr)>0?Math.ceil(Math.max.apply(null,yArr)/10000)*10000+8000:10000;
+yC=new Chart(c1x,{type:'bar',data:{labels:sortedYears,datasets:[{data:yArr,backgroundColor:[gg1,gg2,gg3,gg4].slice(0,sortedYears.length),borderColor:['#4FC3F7','#00E676','#FFD700','#FF6B6B'].slice(0,sortedYears.length),borderWidth:2,borderRadius:14,borderSkipped:false,barPercentage:0.65}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return fmt(c.parsed.y);}}},datalabels:{anchor:'end',align:'end',offset:6,color:function(){return tcc();},font:{family:'Poppins',size:window.innerWidth<768?10:14,weight:'900'},formatter:function(v){return fmt(v);}}},scales:{x:{ticks:{color:tcc(),font:{family:'Poppins',weight:'700'}},grid:{display:false}},y:{beginAtZero:true,max:yMax,ticks:{color:tcc(),callback:function(v){return fmt(v);}},grid:{color:gcc()}}}}});
 var chTot=document.querySelector('.ch-total b');if(chTot)chTot.textContent=fmt(yArr.reduce(function(a,b){return a+b;},0));
 var dNm=[],dVl=[];
 var dColors=['#4FC3F7','#FF6B6B','#00E676','#FFD700','#CE93D8','#FFB74D','#4DB6AC','#FF8A65'];
@@ -541,8 +534,26 @@ var mName=moMap[mRaw];if(!mName)return;
 for(var c in colMap){data[mName][colMap[c]]=pNum(r[c]);}
 });
 return data;}
-[[s23,'b23',true],[s24,'b24',false],[s25,'b25',false],[s26,'b26',false]].forEach(function(s){
-var d=parseYrSheet(s[0]);if(d){rMo(s[1],d,s[2]);log.push('\u2705 '+s[0]+' loaded');}
+// Find all year sheets dynamically
+var yrSheetMap={};
+Object.keys(xlD).forEach(function(sk){var m=sk.trim().match(/^(20\d\d)$/);if(m)yrSheetMap[m[1]]=sk;});
+var yrKeys=Object.keys(yrSheetMap).sort();
+// Build monthly tabs HTML dynamically
+var tabsHTML='',panelsHTML='';
+yrKeys.forEach(function(yr,idx){
+var bid='mBody_'+yr;
+var thCols='<th style="text-align:left;">Month</th>';
+mbs.forEach(function(mb){thCols+='<th>'+mb+'</th>';});
+tabsHTML+='<button class="tb'+(idx===0?' active':'')+'" onclick="sTab(\'mp_'+yr+'\',this)">📆 '+yr+'</button>';
+panelsHTML+='<div id="mp_'+yr+'" class="tc'+(idx===0?' active':'')+'">';
+panelsHTML+='<div class="tbl-wrap"><table><thead><tr>'+thCols+'</tr></thead><tbody id="'+bid+'"></tbody></table></div>';
+panelsHTML+='</div>';
+});
+document.getElementById('monthlyTabs').innerHTML=tabsHTML;
+document.getElementById('monthlyPanels').innerHTML=panelsHTML;
+yrKeys.forEach(function(yr,idx){
+var d=parseYrSheet(yrSheetMap[yr]);
+if(d){rMo('mBody_'+yr,d,idx===0);log.push('\u2705 '+yr+' loaded');}
 });
 
 // GOLD
