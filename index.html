@@ -383,12 +383,17 @@ var nameCol=null;
 cols.forEach(function(c){var cl=String(c).toLowerCase().trim();if(cl==='name'||cl==='names'||cl==='member')nameCol=c;});
 if(!nameCol){cols.forEach(function(c){if(!nameCol&&!/^\d+$/.test(String(c).trim())&&String(c).toLowerCase().trim()!=='total')nameCol=c;});}
 if(!nameCol)nameCol=cols[0];if(/^\d{4}$/.test(String(nameCol).trim())){for(var ci=0;ci<cols.length;ci++){var cc=String(cols[ci]).trim();if(!/^\d+$/.test(cc)&&cc.toLowerCase()!=='total'){nameCol=cols[ci];break;}}}
-var memberRows=[],metaMap={},hitTotal=false;
+var memberRows=[],metaMap={},hitTotal=false,blankIdx=0;
 rows.forEach(function(r){
-var nm=String(r[nameCol]||'').trim();if(!nm)return;
+var nm=String(r[nameCol]||'').trim();
+if(!hitTotal){
+if(!nm)return;
 var nmL=nm.toLowerCase().trim();
-if(!hitTotal){if(nmL==='total'){hitTotal=true;metaMap[nmL]=r;}else{memberRows.push(r);}}
-else{metaMap[nmL]=r;}
+if(nmL==='total'){hitTotal=true;metaMap[nmL]=r;}else{memberRows.push(r);}
+}else{
+var nmL2=nm?nm.toLowerCase().trim():'__blank_'+(blankIdx++);
+metaMap[nmL2]=r;
+}
 });
 
 var yearCols={};
@@ -466,7 +471,7 @@ if(!skipIt&&(mk.indexOf('for gold-')===0||mk.indexOf('for gold ')===0||mk.indexO
 if(skipIt)continue;
 var exRow=metaMap[mk];var exD=extractRowData(exRow);
 if(exD.nums.length===0&&exD.texts.length===0)continue;
-var exLabel=mk.charAt(0).toUpperCase()+mk.slice(1);
+var exLabel=mk.indexOf('__blank_')===0?(exD.texts.length>0?exD.texts[0]:'Adjustment'):mk.charAt(0).toUpperCase()+mk.slice(1);
 var exPrimary=exD.nums.length>0?exD.nums[0]:0;
 var exCls=exPrimary>=0?'epos':'eneg';
 var exSign=exPrimary>0?'+':'';
