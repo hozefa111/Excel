@@ -171,6 +171,29 @@ tr:hover td{background:rgba(255,215,0,0.04);}
 
 .xlsx-err{display:none;color:var(--red);background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:10px;padding:14px;margin-top:12px;font-size:0.88rem;text-align:center;}
 
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:var(--bg2);border:1px solid var(--card-border);border-radius:var(--radius) var(--radius) 0 0;width:100%;max-width:600px;max-height:88vh;display:flex;flex-direction:column;animation:slideUp 0.35s cubic-bezier(0.22,1,0.36,1);}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--border);}
+.modal-head h2{font-size:1.1rem;font-weight:800;color:var(--gold);}
+.modal-close{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-body{overflow-y:auto;padding:18px 20px;flex:1;-webkit-overflow-scrolling:touch;}
+.modal-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+.modal-stat{background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.15);border-radius:12px;padding:14px;text-align:center;}
+.modal-stat .ms-label{font-size:0.72rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;}
+.modal-stat .ms-val{font-size:1.2rem;font-weight:900;color:var(--gold);margin-top:4px;}
+.modal-yr-title{font-size:0.82rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin:14px 0 8px;}
+.modal-mo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+.modal-mo-cell{border-radius:8px;padding:8px 10px;font-size:0.78rem;font-weight:600;text-align:center;line-height:1.4;}
+.mmc-paid{background:rgba(0,230,118,0.1);color:#00E676;border:1px solid rgba(0,230,118,0.2);}
+.mmc-unpaid{background:rgba(255,107,107,0.08);color:#FF6B6B;border:1px solid rgba(255,107,107,0.15);}
+.wa-btn{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:8px;background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.3);color:#25D366;font-size:0.78rem;font-weight:700;cursor:pointer;transition:all 0.2s ease;white-space:nowrap;text-decoration:none;}
+.wa-btn:hover{background:rgba(37,211,102,0.25);border-color:#25D366;}
+.sync-badge{display:inline-block;margin-top:8px;padding:4px 14px;border-radius:20px;background:rgba(0,230,118,0.08);border:1px solid rgba(0,230,118,0.2);color:#00E676;font-size:0.75rem;font-weight:600;}
+
 /* FOOTER */
 .footer{text-align:center;padding:25px 20px;color:var(--text3);font-size:0.8rem;border-top:1px solid var(--border);margin-top:16px;}
 
@@ -255,6 +278,7 @@ table{font-size:0.84rem;}th{padding:11px 10px;font-size:0.73rem;}td{padding:10px
 <h1>🌟 UNITED 🌟</h1>
 <p class="sub">Group Savings Fund Dashboard</p>
 <div class="badge">8 Members · Est. 2023 · Updated May 2026</div>
+<div class="sync-badge" id="syncBadge" style="display:none;">✅ Last synced: —</div>
 </div>
 
 <div class="container">
@@ -290,7 +314,7 @@ table{font-size:0.84rem;}th{padding:11px 10px;font-size:0.73rem;}td{padding:10px
 <div class="section anim" id="pending">
 <div class="s-header"><div class="s-icon" style="background:rgba(255,107,107,0.12);color:var(--red);">⚠️</div><div class="s-title">Pending Amounts</div></div>
 <div class="tbl-wrap"><table>
-<thead><tr><th style="text-align:left;">Name</th><th>Payment</th><th>Gold</th><th>Total</th><th style="min-width:140px;">Status</th></tr></thead>
+<thead><tr><th style="text-align:left;">Name</th><th>Payment</th><th>Gold</th><th>Total</th><th style="min-width:140px;">Status</th><th>Remind</th></tr></thead>
 <tbody id="pBod"></tbody>
 </table></div>
 </div>
@@ -399,7 +423,7 @@ if(mTblHead){var hh='<th style="text-align:left;">Name</th>';sortedYears.forEach
 var mHTML='';
 memberRows.forEach(function(r){
 var nm=String(r[nameCol]||'').trim();var sn=shortName(nm);var tot=0;
-mHTML+='<tr><td class="td-n">'+nm+'</td>';
+mHTML+='<tr><td class="td-n" onclick="openMemberDetail(\''+ sn +'\')" style="cursor:pointer;color:var(--gold);text-decoration:underline dotted;">'+nm+'</td>';
 sortedYears.forEach(function(y){
 var v=pNum(r[yearCols[y]||y]);yearTotals[y]+=v;tot+=v;
 mHTML+='<td>'+fmt(v)+'</td>';
@@ -425,7 +449,7 @@ function extractRowData(row){var nums=[],texts=[];if(!row)return{nums:nums,texts
 totalAmount=getMeta(['total amount']);
 accountVal=getMeta(['account']);
 goldVal=getMeta(['form of gold']);
-pendingVal=getMeta(['pending amount']);
+var pendingVal=getMeta(['pending amount']);
 var cards=document.querySelectorAll('.sc');
 if(cards[0])cards[0].querySelector('.sc-val').textContent=fmt(totalAmount||grandTotal);
 if(cards[1])cards[1].querySelector('.sc-val').textContent=fmt(accountVal);
@@ -506,9 +530,9 @@ pendArr.forEach(function(d){
 var pc=Math.min((d.t/pMax)*100,100);
 var bc='pbg';if(d.t>10000)bc='pbr';else if(d.t>7000)bc='pbo';else if(d.t>0)bc='pby';
 pH+='<tr><td class="td-n">'+d.n+'</td><td>'+fmt(d.p)+'</td><td>'+fmt(d.g)+'</td><td><b>'+fmt(d.t)+'</b></td>';
-pH+='<td><div class="pb-bg"><div class="pb-fill '+bc+'" style="width:'+pc+'%">'+(d.t>0?fmt(d.t):'\u2705')+'</div></div></td></tr>';
+var _wt='Hi '+d.n+'! UNITED Group pending - Payment: ₹'+d.p+', Gold: ₹'+d.g+', Total: ₹'+d.t+'. Please clear soon. -UNITED Group';pH+='<td><div class="pb-bg"><div class="pb-fill '+bc+'" style="width:'+pc+'%">'+(d.t>0?fmt(d.t):'\u2705')+'</div></div></td>';pH+='<td style="text-align:center;">'+(d.t>0?'<a class="wa-btn" href="https://wa.me/?text='+encodeURIComponent(_wt)+'" target="_blank">\uD83D\uDCAC Send</a>':'\u2705')+'</td></tr>';
 });
-pH+='<tr class="t-row"><td class="td-n">Grand Total</td><td>'+fmt(gPay)+'</td><td>'+fmt(gGold)+'</td><td><b>'+fmt(gTot)+'</b></td><td></td></tr>';
+pH+='<tr class="t-row"><td class="td-n">Grand Total</td><td>'+fmt(gPay)+'</td><td>'+fmt(gGold)+'</td><td><b>'+fmt(gTot)+'</b></td><td></td><td></td></tr>';
 document.getElementById('pBod').innerHTML=pH;
 var card4=document.querySelectorAll('.sc')[3];
 if(card4){card4.querySelector('.sc-val').textContent=fmt(gTot);var sub4=card4.querySelector('.sc-sub');if(sub4)sub4.textContent='Pay '+fmt(gPay)+' + Gold '+fmt(gGold);}
@@ -614,7 +638,7 @@ goldHTML+='</div>';
 }
 var goldGrid=document.querySelector('#gold .g-grid');
 if(goldGrid&&goldHTML)goldGrid.innerHTML=goldHTML;
-var ts2=document.getElementById('topStatus');if(ts2){ts2.style.display='block';ts2.textContent='\u2705 Dashboard Updated! '+log.length+' sheets loaded';ts2.style.background='#1b5e20';setTimeout(function(){ts2.style.opacity='0';setTimeout(function(){ts2.style.display='none';ts2.style.opacity='1';},600);},4000);}
+window._uMbs=mbs;window._uRows=memberRows;window._uTotals=memberTotals;window._uPend=pendArr||[];window._uYrMap=yrSheetMap;window._uYrKeys=yrKeys;window._uNameCol=nameCol;window._uSortedYears=sortedYears;var _sb=document.getElementById('syncBadge');if(_sb){var _nd=new Date();_sb.style.display='inline-block';_sb.textContent='\u2705 Synced: '+_nd.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' '+_nd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}var ts2=document.getElementById('topStatus');if(ts2){ts2.style.display='block';ts2.textContent='\u2705 Dashboard Updated! '+log.length+' sheets loaded';ts2.style.background='#1b5e20';setTimeout(function(){ts2.style.opacity='0';setTimeout(function(){ts2.style.display='none';ts2.style.opacity='1';},600);},4000);}
 window.scrollTo({top:0,behavior:'smooth'});
 }catch(err){alert('\u274c Error: '+err.message);console.error(err);}
 }
@@ -633,8 +657,62 @@ function fetchGH(){if(typeof XLSX==='undefined'){alert('SheetJS not loaded. Relo
 (function(){var u='https://hozefa111.github.io/Excel/%F0%9F%8C%9FUNITED%F0%9F%8C%9F.xlsx';document.getElementById('ghUrl').value=u;var ts=document.getElementById('topStatus');if(ts)ts.textContent='📦 Loading XLSX library...';var a=0;var p=setInterval(function(){a++;if(typeof XLSX!=='undefined'){clearInterval(p);if(ts)ts.textContent='🌐 XLSX loaded! Fetching data...';fetchGH();}else if(a>=30){clearInterval(p);if(ts){ts.textContent='❌ XLSX library failed. Check internet & reload.';ts.style.background='#b71c1c';}}},500);})();
 
 (function(){var a=document.querySelectorAll('.anim');if('IntersectionObserver' in window){var o=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){en.target.classList.add('visible');o.unobserve(en.target);}});},{threshold:0.12});a.forEach(function(el){o.observe(el);});}else{a.forEach(function(el){el.classList.add('visible');});}})();
+
+function openMemberDetail(sn){
+var memberRows=window._uRows||[];
+var memberTotals=window._uTotals||{};
+var pendArr=window._uPend||[];
+var yrSheetMap=window._uYrMap||{};
+var yrKeys=window._uYrKeys||[];
+var nameCol=window._uNameCol||'Name';
+var pInfo=null;
+for(var pi=0;pi<pendArr.length;pi++){if(pendArr[pi].n===sn){pInfo=pendArr[pi];break;}}
+if(!pInfo)pInfo={p:0,g:0,t:0};
+var total=memberTotals[sn]||0;
+var fullName=sn;
+for(var ri=0;ri<memberRows.length;ri++){if(shortName(String(memberRows[ri][nameCol]||'').trim())===sn){fullName=String(memberRows[ri][nameCol]||'').trim();break;}}
+document.getElementById('modalMemberName').textContent='\uD83D\uDC64 '+fullName;
+var h='<div class="modal-stat-row">';
+h+='<div class="modal-stat"><div class="ms-label">Total Paid</div><div class="ms-val">'+fmt(total)+'</div></div>';
+h+='<div class="modal-stat"><div class="ms-label">Pending</div><div class="ms-val" style="color:var(--red);">'+fmt(pInfo.t)+'</div></div>';
+h+='<div class="modal-stat"><div class="ms-label">Gold Pend.</div><div class="ms-val" style="color:var(--orange);">'+fmt(pInfo.g)+'</div></div>';
+h+='</div>';
+for(var yi=0;yi<yrKeys.length;yi++){
+var yr=yrKeys[yi];if(!yrSheetMap[yr])continue;
+var yrData=parseYrSheet(yrSheetMap[yr]);if(!yrData)continue;
+var yrTotal=0;var yrCells='';
+for(var mi=0;mi<mos.length;mi++){
+var m=mos[mi];var v=(yrData[m]&&yrData[m][sn])||0;yrTotal+=v;
+var hasAny=false;for(var k in yrData[m]){if((yrData[m][k]||0)>0){hasAny=true;break;}}
+if(!hasAny)continue;
+yrCells+='<div class="modal-mo-cell '+(v>0?'mmc-paid':'mmc-unpaid')+'">'+m.substring(0,3)+(v>0?'<br>\u20b9'+v:'<br>\u274c')+'</div>';
+}
+if(!yrCells)continue;
+h+='<div class="modal-yr-title">\uD83D\uDCC6 '+yr+'</div>';
+h+='<div class="modal-mo-grid">'+yrCells+'</div>';
+h+='<p style="font-size:0.82rem;color:var(--text2);margin-bottom:4px;">Year Total: <b style="color:var(--gold);">'+fmt(yrTotal)+'</b></p>';
+}
+if(pInfo.t>0){
+var waTxt='Hi '+sn+'! UNITED Group pending - Payment: \u20b9'+pInfo.p+', Gold: \u20b9'+pInfo.g+', Total: \u20b9'+pInfo.t+'. Please clear soon. -UNITED Group';
+h+='<a class="wa-btn" href="https://wa.me/?text='+encodeURIComponent(waTxt)+'" target="_blank" style="margin-top:14px;font-size:0.9rem;padding:10px 18px;">\uD83D\uDCAC Send WhatsApp Reminder</a>';
+}
+document.getElementById('modalBody').innerHTML=h;
+document.getElementById('memberModal').classList.add('open');
+document.body.style.overflow='hidden';
+}
+function closeMemberModal(){
+document.getElementById('memberModal').classList.remove('open');
+document.body.style.overflow='';
+}
+
 function staggerReveal(ps,cs,d){document.querySelectorAll(ps).forEach(function(p){var so=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){en.target.querySelectorAll(cs).forEach(function(ch,i){ch.style.opacity='0';ch.style.transform='translateY(25px)';ch.style.transition='opacity 0.5s ease '+(i*d)+'s,transform 0.5s ease '+(i*d)+'s';setTimeout(function(){ch.style.opacity='1';ch.style.transform='translateY(0)';},50);});so.unobserve(en.target);}});},{threshold:0.15});so.observe(p);});}
 staggerReveal('.sum-grid','.sc',0.12);staggerReveal('.g-grid','.gc',0.15);staggerReveal('.ex-grid','.ex',0.1);staggerReveal('.dl-grid','.dl-item',0.08);
 </script>
+
+<div class="modal-overlay" id="memberModal" onclick="if(event.target===this)closeMemberModal()">
+<div class="modal-box">
+<div class="modal-head"><h2 id="modalMemberName">Member Detail</h2><button class="modal-close" onclick="closeMemberModal()">✕</button></div>
+<div class="modal-body" id="modalBody"></div>
+</div></div>
 </body>
 </html>
