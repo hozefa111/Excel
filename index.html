@@ -736,6 +736,12 @@ function animateCounter(el,target,prefix){
 
 window._uMbs=mbs;window._uRows=memberRows;window._uTotals=memberTotals;window._uPend=pendArr||[];window._uYrMap=yrSheetMap;window._uYrKeys=yrKeys;window._uNameCol=nameCol;window._uSortedYears=sortedYears;var _sb=document.getElementById('syncBadge');if(_sb){var _nd=new Date();_sb.style.display='inline-block';_sb.textContent='\u2705 Synced: '+_nd.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' '+_nd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}var ts2=document.getElementById('topStatus');if(ts2){ts2.style.display='block';ts2.textContent='\u2705 Dashboard Updated! '+log.length+' sheets loaded';ts2.style.background='#1b5e20';setTimeout(function(){ts2.style.opacity='0';setTimeout(function(){ts2.style.display='none';ts2.style.opacity='1';},600);},4000);}
 window.scrollTo({top:0,behavior:'smooth'});
+// Re-apply touch hover after data renders
+setTimeout(function(){
+  ['sc','gc','ch-box','ex','dl-item','section','nav-btn','tb','wa-btn'].forEach(function(cls){
+    addTouchHover('.'+cls);
+  });
+},200);
 }catch(err){console.error(err);var _ts=document.getElementById('topStatus');if(_ts){_ts.style.display='block';_ts.style.background='#b71c1c';_ts.textContent='\u274c Error: '+err.message;}}
 }
 
@@ -814,7 +820,7 @@ function addTouchHover(selector){
     el.addEventListener('touchcancel',function(){el.classList.remove('t-hover');},{passive:true});
   });
 }
-// Apply to all interactive elements
+// Apply touch hover after data renders
 setTimeout(function(){
   addTouchHover('.sc');
   addTouchHover('.gc');
@@ -826,7 +832,7 @@ setTimeout(function(){
   addTouchHover('.tb');
   addTouchHover('.wa-btn');
   addTouchHover('.modal-mo-cell');
-},1500);
+},100);
 
 // Scroll progress bar
 window.addEventListener('scroll',function(){
