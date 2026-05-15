@@ -450,7 +450,7 @@ function gcc(){return document.body.classList.contains('light-mode')?'rgba(0,0,0
 function upCh(){if(!yC||!mC||!pC)return;[yC,mC,pC].forEach(function(c){if(c.options.scales)Object.keys(c.options.scales).forEach(function(k){if(c.options.scales[k].ticks)c.options.scales[k].ticks.color=tcc();if(c.options.scales[k].grid)c.options.scales[k].grid.color=gcc();});c.update();});}
 
 
-function handleXL(e){var file=e.target.files[0];if(!file)return;if(typeof XLSX==='undefined'){alert('SheetJS library not loaded. Please check your internet connection and reload the page.');return;}var reader=new FileReader();reader.onload=function(ev){var _ts=document.getElementById('topStatus');if(_ts){_ts.style.display='block';_ts.style.background='linear-gradient(90deg,#1a1a2e,#2d1b69)';_ts.textContent='⏳ Processing Excel...';}try{var data=new Uint8Array(ev.target.result);var wb=XLSX.read(data,{type:'array'});xlD={};wb.SheetNames.forEach(function(sn){xlD[sn]=XLSX.utils.sheet_to_json(wb.Sheets[sn]);});applyXL();if(_ts){_ts.textContent='✅ Dashboard Loaded!';_ts.style.background='#1b5e20';setTimeout(function(){_ts.style.opacity='0';setTimeout(function(){_ts.style.display='none';_ts.style.opacity='1';},600);},4000);}}catch(err){if(_ts){_ts.textContent='❌ Error: '+err.message;_ts.style.background='#b71c1c';}alert('Error: '+err.message);}};reader.readAsArrayBuffer(file);}
+
 
 function applyXL(){
 if(!xlD)return;
@@ -736,20 +736,11 @@ function animateCounter(el,target,prefix){
 
 window._uMbs=mbs;window._uRows=memberRows;window._uTotals=memberTotals;window._uPend=pendArr||[];window._uYrMap=yrSheetMap;window._uYrKeys=yrKeys;window._uNameCol=nameCol;window._uSortedYears=sortedYears;var _sb=document.getElementById('syncBadge');if(_sb){var _nd=new Date();_sb.style.display='inline-block';_sb.textContent='\u2705 Synced: '+_nd.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' '+_nd.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}var ts2=document.getElementById('topStatus');if(ts2){ts2.style.display='block';ts2.textContent='\u2705 Dashboard Updated! '+log.length+' sheets loaded';ts2.style.background='#1b5e20';setTimeout(function(){ts2.style.opacity='0';setTimeout(function(){ts2.style.display='none';ts2.style.opacity='1';},600);},4000);}
 window.scrollTo({top:0,behavior:'smooth'});
-}catch(err){alert('\u274c Error: '+err.message);console.error(err);}
+}catch(err){console.error(err);var _ts=document.getElementById('topStatus');if(_ts){_ts.style.display='block';_ts.style.background='#b71c1c';_ts.textContent='\u274c Error: '+err.message;}}
 }
 
-function dlTemplate(){
-var wb=XLSX.utils.book_new();
-var hd=[['Month','Abbas & Alefiya','Abdul & Mariya','Burhan & Khadija','Hozefa & Fatema','Shabbir & Shirin','Mustufa & Amatullah','Murtaza & Insiya','Hakim & Zohra']];
-mos.forEach(function(m){hd.push([m,0,0,0,0,0,0,0,0]);});
-hd.push(['Total','','','','','','','','']);
-var ws=XLSX.utils.aoa_to_sheet(hd);XLSX.utils.book_append_sheet(wb,ws,'2025');
-XLSX.writeFile(wb,'UNITED_Template.xlsx');
-}
 
-function saveGHUrl(){var url=document.getElementById('ghUrl').value.trim();if(url){localStorage.setItem('unitedGithubUrl',url);alert('\u2705 URL saved!');}else{alert('Enter a URL first.');}}
-function fetchGH(){if(typeof XLSX==='undefined'){alert('SheetJS not loaded. Reload page.');return;}var url=document.getElementById('ghUrl').value.trim();if(!url){alert('Enter GitHub raw URL.');return;}var ts=document.getElementById('topStatus');if(ts){ts.style.display='block';ts.style.background='linear-gradient(90deg,#1a1a2e,#2d1b69)';ts.textContent='⏳ Fetching from GitHub...';}var fu=url+(url.indexOf('?')>-1?'&':'?')+'t='+Date.now();fetch(fu,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();}).then(function(buf){var wb=XLSX.read(new Uint8Array(buf),{type:'array'});xlD={};wb.SheetNames.forEach(function(sn){xlD[sn]=XLSX.utils.sheet_to_json(wb.Sheets[sn]);});applyXL();if(ts){ts.textContent='✅ Dashboard Loaded!';ts.style.background='#1b5e20';setTimeout(function(){ts.style.opacity='0';setTimeout(function(){ts.style.display='none';ts.style.opacity='1';},600);},4000);}}).catch(function(err){console.error('fetchGH:',err);if(ts){ts.textContent='❌ Fetch Failed: '+err.message;ts.style.background='#b71c1c';}});}
+function fetchGH(){if(typeof XLSX==='undefined'){var _ts=document.getElementById('topStatus');if(_ts){_ts.style.display='block';_ts.style.background='#b71c1c';_ts.textContent='\u274c SheetJS not loaded. Reload page.';}return;}var url=document.getElementById('ghUrl').value.trim();if(!url){return;}var ts=document.getElementById('topStatus');if(ts){ts.style.display='block';ts.style.background='linear-gradient(90deg,#1a1a2e,#2d1b69)';ts.textContent='⏳ Fetching from GitHub...';}var fu=url+(url.indexOf('?')>-1?'&':'?')+'t='+Date.now();fetch(fu,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer();}).then(function(buf){var wb=XLSX.read(new Uint8Array(buf),{type:'array'});xlD={};wb.SheetNames.forEach(function(sn){xlD[sn]=XLSX.utils.sheet_to_json(wb.Sheets[sn]);});applyXL();if(ts){ts.textContent='✅ Dashboard Loaded!';ts.style.background='#1b5e20';setTimeout(function(){ts.style.opacity='0';setTimeout(function(){ts.style.display='none';ts.style.opacity='1';},600);},4000);}}).catch(function(err){console.error('fetchGH:',err);if(ts){ts.textContent='❌ Fetch Failed: '+err.message;ts.style.background='#b71c1c';}});}
 (function(){var u='https://hozefa111.github.io/Excel/%F0%9F%8C%9FUNITED%F0%9F%8C%9F.xlsx';document.getElementById('ghUrl').value=u;var ts=document.getElementById('topStatus');if(ts)ts.textContent='📦 Loading XLSX library...';var a=0;var p=setInterval(function(){a++;if(typeof XLSX!=='undefined'){clearInterval(p);if(ts)ts.textContent='🌐 XLSX loaded! Fetching data...';fetchGH();}else if(a>=30){clearInterval(p);if(ts){ts.textContent='❌ XLSX library failed. Check internet & reload.';ts.style.background='#b71c1c';}}},500);})();
 
 (function(){var a=document.querySelectorAll('.anim');if('IntersectionObserver' in window){var o=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting){en.target.classList.add('visible');o.unobserve(en.target);}});},{threshold:0.12});a.forEach(function(el){o.observe(el);});}else{a.forEach(function(el){el.classList.add('visible');});}})();
