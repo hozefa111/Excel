@@ -587,6 +587,9 @@ yrKeys.forEach(function(yr,idx){
 var d=parseYrSheet(yrSheetMap[yr]);
 if(d){rMo('mBody_'+yr,d,idx===0);log.push('\u2705 '+yr+' loaded');}
 });
+// Store parsed year data globally for member detail modal
+window._uYrData={};
+yrKeys.forEach(function(yr){if(yrSheetMap[yr])window._uYrData[yr]=parseYrSheet(yrSheetMap[yr]);});
 
 // GOLD
 function parseGold(sheetName){
@@ -678,8 +681,9 @@ h+='<div class="modal-stat"><div class="ms-label">Pending</div><div class="ms-va
 h+='<div class="modal-stat"><div class="ms-label">Gold Pend.</div><div class="ms-val" style="color:var(--orange);">'+fmt(pInfo.g)+'</div></div>';
 h+='</div>';
 for(var yi=0;yi<yrKeys.length;yi++){
-var yr=yrKeys[yi];if(!yrSheetMap[yr])continue;
-var yrData=parseYrSheet(yrSheetMap[yr]);if(!yrData)continue;
+var yr=yrKeys[yi];
+var yrData=(window._uYrData&&window._uYrData[yr])||null;
+if(!yrData)continue;
 var yrTotal=0;var yrCells='';
 for(var mi=0;mi<mos.length;mi++){
 var m=mos[mi];var v=(yrData[m]&&yrData[m][sn])||0;yrTotal+=v;
