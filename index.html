@@ -42,7 +42,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);lin
 .nav-link:hover{color:var(--gold);background:rgba(255,215,0,0.08);}
 .nav-ctrls{display:flex;gap:6px;flex-shrink:0;}
 .nav-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--card-border);background:var(--card);color:var(--text);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:var(--tr);}
-.nav-btn:hover{border-color:var(--gold);background:rgba(255,215,0,0.1);}
+.nav-btn:hover{border-color:var(--gold);background:rgba(255,215,0,0.1);transform:scale(1.08);}
 
 /* HERO */
 .hero{text-align:center;padding:40px 20px 30px;}
@@ -262,7 +262,7 @@ table{font-size:0.84rem;}th{padding:11px 10px;font-size:0.73rem;}td{padding:10px
 .ch-box{transition:transform 0.45s cubic-bezier(0.22,1,0.36,1),box-shadow 0.45s ease;}
 .ch-box:hover{transform:translateY(-8px);box-shadow:0 16px 50px rgba(0,0,0,0.4);}
 /* Table rows */
-.tbl-wrap tbody tr{opacity:0;animation:rowSlide 0.45s cubic-bezier(0.22,1,0.36,1) both;}
+.tbl-wrap tbody tr{opacity:0;animation:rowSlide 0.45s cubic-bezier(0.22,1,0.36,1) both;transition:background 0.2s ease;}
 .tbl-wrap tbody tr:nth-child(1){animation-delay:0.04s;}.tbl-wrap tbody tr:nth-child(2){animation-delay:0.08s;}
 .tbl-wrap tbody tr:nth-child(3){animation-delay:0.12s;}.tbl-wrap tbody tr:nth-child(4){animation-delay:0.16s;}
 .tbl-wrap tbody tr:nth-child(5){animation-delay:0.20s;}.tbl-wrap tbody tr:nth-child(6){animation-delay:0.24s;}
@@ -297,6 +297,36 @@ table{font-size:0.84rem;}th{padding:11px 10px;font-size:0.73rem;}td{padding:10px
 .tbl-wrap tbody tr{animation:none;opacity:1;}
 .sc,.gc,.ch-box,.ex,.section{transition:none;}
 }
+
+
+/* TOUCH HOVER (mobile) */
+.sc.t-hover{transform:translateY(-7px) scale(1.025)!important;box-shadow:0 16px 40px rgba(0,0,0,0.45),0 0 20px rgba(255,215,0,0.15)!important;}
+.sc.t-hover .sc-icon{transform:scale(1.3) rotate(12deg)!important;}
+.sc.t-hover::after{left:120%!important;}
+.gc.t-hover{transform:translateY(-7px) scale(1.025)!important;box-shadow:0 16px 40px rgba(0,0,0,0.5),0 0 25px rgba(255,215,0,0.2)!important;}
+.ch-box.t-hover{transform:translateY(-8px)!important;box-shadow:0 16px 50px rgba(0,0,0,0.4)!important;}
+.ex.t-hover{transform:translateY(-6px) scale(1.03)!important;}
+.dl-item.t-hover{transform:translateX(8px) scale(1.02)!important;}
+.section.t-hover{border-color:rgba(255,215,0,0.28)!important;box-shadow:0 12px 50px rgba(0,0,0,0.55)!important;transform:translateY(-2px)!important;}
+.nav-btn.t-hover{border-color:var(--gold)!important;background:rgba(255,215,0,0.1)!important;}
+.tb.t-hover{color:var(--gold)!important;border-color:rgba(255,215,0,0.3)!important;}
+.wa-btn.t-hover{transform:scale(1.06)!important;background:rgba(37,211,102,0.25)!important;border-color:#25D366!important;}
+/* Pulse glow on KPI hover - via box-shadow only to avoid transform conflict */
+/* Modal cell hover */
+.modal-mo-cell{transition:transform 0.2s cubic-bezier(0.34,1.56,0.64,1);}
+.modal-mo-cell:hover,.modal-mo-cell.t-hover{transform:scale(1.08);}
+/* Nav btn */
+.nav-btn{transition:border-color 0.2s ease,background 0.2s ease,transform 0.2s ease;}
+.nav-btn:active{transform:scale(0.9)!important;}
+/* Gold card icon float */
+@keyframes goldFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-5px) scale(1.05)}}
+.gc:hover .gp,.gc.t-hover .gp{animation:goldFloat 2s ease-in-out infinite;}
+/* Section icon bounce */
+.s-icon{transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+.section:hover .s-icon,.section.t-hover .s-icon{transform:scale(1.2) rotate(-8deg);}
+/* Extra card value pop */
+.ex:hover .ev,.ex.t-hover .ev{transform:scale(1.1);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+/* Pending table row */
 
 .light-mode #topStatus{background:linear-gradient(90deg,#fff8e1,#fffde7)!important;color:#8B6914!important;border-bottom-color:#B8860B!important;}
 </style>
@@ -764,7 +794,7 @@ var waTxt='Hi '+sn+'! UNITED Group pending - Payment: \u20b9'+pInfo.p+', Gold: \
 h+='<a class="wa-btn" href="https://wa.me/?text='+encodeURIComponent(waTxt)+'" target="_blank" style="margin-top:14px;font-size:0.9rem;padding:10px 18px;">\uD83D\uDCAC Send WhatsApp Reminder</a>';
 }
 document.getElementById('modalBody').innerHTML=h;
-document.getElementById('memberModal').classList.add('open');haptic(10);
+document.getElementById('memberModal').classList.add('open');haptic(10);addTouchHover('.modal-mo-cell');
 document.body.style.overflow='hidden';
 }
 function closeMemberModal(){
@@ -783,6 +813,29 @@ if(typeof Chart !== 'undefined'){
 
 // Haptic feedback helper
 function haptic(ms){try{if(navigator.vibrate)navigator.vibrate(ms||8);}catch(e){}}
+
+
+// Touch hover for mobile
+function addTouchHover(selector){
+  document.querySelectorAll(selector).forEach(function(el){
+    el.addEventListener('touchstart',function(){el.classList.add('t-hover');},{passive:true});
+    el.addEventListener('touchend',function(){setTimeout(function(){el.classList.remove('t-hover');},300);},{passive:true});
+    el.addEventListener('touchcancel',function(){el.classList.remove('t-hover');},{passive:true});
+  });
+}
+// Apply to all interactive elements
+setTimeout(function(){
+  addTouchHover('.sc');
+  addTouchHover('.gc');
+  addTouchHover('.ch-box');
+  addTouchHover('.ex');
+  addTouchHover('.dl-item');
+  addTouchHover('.section');
+  addTouchHover('.nav-btn');
+  addTouchHover('.tb');
+  addTouchHover('.wa-btn');
+  addTouchHover('.modal-mo-cell');
+},1500);
 
 // Scroll progress bar
 window.addEventListener('scroll',function(){
