@@ -520,7 +520,7 @@ function extractRowData(row){var nums=[],texts=[];if(!row)return{nums:nums,texts
 totalAmount=getMeta(['total amount']);
 accountVal=getMeta(['account']);
 goldVal=getMeta(['form of gold']);
-pendingVal=getMeta(['pending amount']);
+var pendingVal=getMeta(['pending amount']);
 var cards=document.querySelectorAll('.sc');
 if(cards[0]){var _v0=totalAmount||grandTotal;animateCounter(cards[0].querySelector('.sc-val'),_v0);}
 if(cards[1]){animateCounter(cards[1].querySelector('.sc-val'),accountVal);}
@@ -654,9 +654,10 @@ panelsHTML+='</div>';
 });
 document.getElementById('monthlyTabs').innerHTML=tabsHTML;
 document.getElementById('monthlyPanels').innerHTML=panelsHTML;
+window._uYrData={};
 yrKeys.forEach(function(yr,idx){
 var d=parseYrSheet(yrSheetMap[yr]);
-if(d){rMo('mBody_'+yr,d,idx===0);log.push('\u2705 '+yr+' loaded');}
+if(d){window._uYrData[yr]=d;rMo('mBody_'+yr,d,idx===0);log.push('\u2705 '+yr+' loaded');}
 });
 
 // GOLD
@@ -805,7 +806,7 @@ function openMemberDetail(sn){
   var total=memberTotals[sn]||0;
   var fullName=sn;
   for(var ri=0;ri<memberRows.length;ri++){if(shortName(String(memberRows[ri][nameCol]||'').trim())===sn){fullName=String(memberRows[ri][nameCol]||'').trim();break;}}
-  document.getElementById('modalMemberName').textContent='Ì†ΩÌ±§ '+fullName;
+  document.getElementById('modalMemberName').textContent='>> '+fullName;
   var h='<div class="modal-stat-row">';
   h+='<div class="modal-stat"><div class="ms-label">Total Paid</div><div class="ms-val">'+fmt(total)+'</div></div>';
   h+='<div class="modal-stat"><div class="ms-label">Pending</div><div class="ms-val" style="color:var(--red);">'+fmt(pInfo.t)+'</div></div>';
@@ -817,19 +818,22 @@ function openMemberDetail(sn){
     if(!yrData)continue;
     var yrTotal=0;var yrCells='';
     for(var mi=0;mi<mos.length;mi++){
-      var m=mos[mi];var v=(yrData[m]&&yrData[m][sn])||0;yrTotal+=v;
-      var hasAny=false;for(var k in yrData[m]){if((yrData[m][k]||0)>0){hasAny=true;break;}}
-      if(!hasAny)continue;
-      yrCells+='<div class="modal-mo-cell '+(v>0?'mmc-paid':'mmc-unpaid')+'">'+m.substring(0,3)+(v>0?'<br>‚Çπ'+v:'<br>‚ùå')+'</div>';
+      var m=mos[mi];
+      if(!yrData[m])continue;
+      var v=yrData[m][sn]||0;
+      yrTotal+=v;
+      var hasMonth=Object.keys(yrData[m]).length>0;
+      if(!hasMonth)continue;
+      yrCells+='<div class="modal-mo-cell '+(v>0?'mmc-paid':'mmc-unpaid')+'">'+m.substring(0,3)+(v>0?'<br>\u20b9'+v:'<br>X')+'</div>';
     }
     if(!yrCells)continue;
-    h+='<div class="modal-yr-title">Ì†ΩÌ≥Ü '+yr+'</div>';
+    h+='<div class="modal-yr-title">-- '+yr+'</div>';
     h+='<div class="modal-mo-grid">'+yrCells+'</div>';
     h+='<p style="font-size:0.82rem;color:var(--text2);margin-bottom:4px;">Year Total: <b style="color:var(--gold);">'+fmt(yrTotal)+'</b></p>';
   }
   if(pInfo.t>0){
-    var waTxt='Hi '+sn+'! UNITED Group pending - Payment: ‚Çπ'+pInfo.p+', Gold: ‚Çπ'+pInfo.g+', Total: ‚Çπ'+pInfo.t+'. Please clear soon. -UNITED Group';
-    h+='<a class="wa-btn" href="https://wa.me/?text='+encodeURIComponent(waTxt)+'" target="_blank" style="margin-top:14px;font-size:0.9rem;padding:10px 18px;">Ì†ΩÌ≤¨ Send WhatsApp Reminder</a>';
+    var waTxt='Hi '+sn+'! UNITED Group pending - Payment: \u20b9'+pInfo.p+', Gold: \u20b9'+pInfo.g+', Total: \u20b9'+pInfo.t+'. Please clear soon. -UNITED Group';
+    h+='<a class="wa-btn" href="https://wa.me/?text='+encodeURIComponent(waTxt)+'" target="_blank" style="margin-top:14px;font-size:0.9rem;padding:10px 18px;">Send WhatsApp Reminder</a>';
   }
   document.getElementById('modalBody').innerHTML=h;
   document.getElementById('memberModal').classList.add('open');
