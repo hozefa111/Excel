@@ -776,9 +776,18 @@ function openMemberDetail(sn){
   var yrKeys=window._uYrKeys||[];
   var nameCol=window._uNameCol||'Name';
   var pInfo=null;
-  for(var pi=0;pi<pendArr.length;pi++){if(pendArr[pi].n===sn){pInfo=pendArr[pi];break;}}
+  var snL=sn.toLowerCase();
+  for(var pi=0;pi<pendArr.length;pi++){
+    if(pendArr[pi].n===sn||pendArr[pi].n.toLowerCase()===snL||
+       pendArr[pi].n.toLowerCase().indexOf(snL)===0||snL.indexOf(pendArr[pi].n.toLowerCase())===0){
+      pInfo=pendArr[pi];break;}
+  }
   if(!pInfo)pInfo={p:0,g:0,t:0};
   var total=memberTotals[sn]||0;
+  if(!total){for(var tk in memberTotals){
+    if(tk.toLowerCase()===snL||tk.toLowerCase().indexOf(snL)===0||snL.indexOf(tk.toLowerCase())===0){
+      total=memberTotals[tk];break;}
+  }}
   var fullName=sn;
   for(var ri=0;ri<memberRows.length;ri++){
     if(shortName(String(memberRows[ri][nameCol]||'').trim())===sn){
